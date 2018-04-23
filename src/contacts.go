@@ -12,17 +12,18 @@ const contactEndpoint = "usercontacts"
 
 // Contact holds information of a contact
 type Contact struct {
-	ID          string `json:"id"`
-	Firstname   string `json:"firstname"`
-	Lastname    string `json:"lastname"`
-	Phone       string `json:"phone"`
-	Email       string `json:"email"`
-	DOB         string `json:"dob"`
-	Nationality string `json:"nationality"`
-	HasDeposit  bool   `json:"hasdeposit"`
-	AddressID   string `json:"addressid"`
-	AgentID     string `json:"agentid"`
-	ManageByID  string `json:"managebyid"`
+	ID          string  `json:"id"`
+	Firstname   string  `json:"firstname"`
+	Lastname    string  `json:"lastname"`
+	Phone       string  `json:"phone"`
+	Email       string  `json:"email"`
+	DOB         string  `json:"dob"`
+	Nationality string  `json:"nationality"`
+	HasDeposit  bool    `json:"hasdeposit"`
+	AddressID   string  `json:"addressid"`
+	Address     Address `json:"address"`
+	AgentID     string  `json:"agentid"`
+	ManageByID  string  `json:"managebyid"`
 }
 
 // execute the HTTP requests and get the single Contact that should come out
