@@ -8,10 +8,10 @@ import (
 // Add required headers and execute the request
 func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("X-DS-AUTH-APITOKEN", s.Auth.APIKey)
-	req.Header.Add("X-DS-AUTH-COMPANY", s.Auth.Company)
-	req.Header.Add("X-DS-DATA-APITOKEN", s.Auth.APIKey)
-	req.Header.Add("X-DS-DATA-COMPANY", s.Company.ID)
+	req.Header["X-DS-AUTH-APITOKEN"] = []string{s.Auth.APIKey}
+	req.Header["X-DS-AUTH-COMPANY"] = []string{s.Auth.Company}
+	req.Header["X-DS-DATA-APITOKEN"] = []string{s.Auth.APIKey}
+	req.Header["X-DS-DATA-COMPANY"] = []string{s.Company.ID}
 
 	return http.DefaultClient.Do(req)
 }
