@@ -4,4 +4,5 @@ package portal
 type Session struct {
 	Auth    Auth
 	Project Project
+	Company Company
 }
