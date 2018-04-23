@@ -15,3 +15,6 @@
 
 # Local history
 .history/
+
+# Test Environment
+/test

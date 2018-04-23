@@ -13,22 +13,21 @@ const listingEndpoint = "listings"
 // Listing holds information of a listing
 type Listing struct {
 	ID            string
-	Name          string   `json:"listing_name"`
-	Availability  string   `json:"availability"`
-	Floor         string   `json:"floor"`
-	Building      string   `json:"building"`
-	LotNumbers    []string `json:"lots"`
-	Price         float32  `json:"live_price"`
-	OriginalPrice float32  `json:"price"`
-	Bedrooms      string   `json:"bedrooms"`
-	Bathrooms     string   `json:"bathrooms"`
-	Study         string   `json:"study"`
-	Carspaces     string   `json:"carspaces"`
-	Aspect        string   `json:"aspect_orientation"`
-	MarketingPlan string   `json:"marketing_plan"`
-	InternalArea  float32  `json:"internal_area"`
-	ExternalArea  float32  `json:"external_area"`
-	TotalArea     float32  `json:"total_area"`
+	Name          string  `json:"listing_name"`
+	Availability  string  `json:"availability"`
+	Floor         string  `json:"floor"`
+	Building      string  `json:"building"`
+	Price         float32 `json:"live_price"`
+	OriginalPrice float32 `json:"price"`
+	Bedrooms      string  `json:"bedrooms"`
+	Bathrooms     string  `json:"bathrooms"`
+	Study         string  `json:"study"`
+	Carspaces     string  `json:"carspaces"`
+	Aspect        string  `json:"aspect_orientation"`
+	MarketingPlan string  `json:"marketing_plan"`
+	InternalArea  float32 `json:"internal_area"`
+	ExternalArea  float32 `json:"external_area"`
+	TotalArea     float32 `json:"total_area"`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
@@ -38,42 +37,19 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 		return nil, err
 	}
 
-	listingID, _ := setListingID(responseBytes)
+	var c map[string]*Listing
 
-	listing := &Listing{}
-	err = json.Unmarshal(responseBytes, listing)
-	listing.ID = listingID
-
-	return listing, err
-}
-
-//https://stackoverflow.com/questions/17452722/how-to-get-the-key-value-from-a-json-string-in-go
-func setListingID(responseBytes []byte) (string, error) {
-	// a map container to decode the JSON structure into
-	c := make(map[string]interface{})
-
-	// unmarshal JSON
-	e := json.Unmarshal(responseBytes, &c)
-
-	// panic on error
-	if e != nil {
-		panic(e)
+	err = json.Unmarshal(responseBytes, &c)
+	if err != nil {
+		return nil, err
 	}
 
-	// a string slice to hold the keys
-	k := make([]string, len(c))
-
-	// iteration counter
-	i := 0
-
-	// copy c's keys into k
-	for s, _ := range c {
-		k[i] = s
-		i++
+	var v *Listing
+	for k, v := range c {
+		v.ID = k
 	}
 
-	//just want the parent key
-	return k[0], nil
+	return v, nil
 }
 
 // GetListingByID gets a single listing by its ID
