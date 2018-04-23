@@ -12,18 +12,22 @@ const listingEndpoint = "listings"
 
 // Listing holds information of a listing
 type Listing struct {
-	ID            string
-	Name          string
-	Availability  string
-	LotNumbers    string
-	Price         float32
-	OriginalPrice float32
-	Bedrooms      string
-	Bathrooms     string
-	Carspaces     string
-	InternalArea  float32
-	ExternalArea  float32
-	TotalArea     float32
+	Name          string   `json:"listing_name"`
+	Availability  string   `json:"availability"`
+	Floor         string   `json:"floor"`
+	Building      string   `json:"building"`
+	LotNumbers    []string `json:"lots"`
+	Price         float32  `json:"live_price"`
+	OriginalPrice float32  `json:"price"`
+	Bedrooms      string   `json:"bedrooms"`
+	Bathrooms     string   `json:"bathrooms"`
+	Study         string   `json:"study"`
+	Carspaces     string   `json:"carspaces"`
+	Aspect        string   `json:"aspect_orientation"`
+	MarketingPlan string   `json:"marketing_plan"`
+	InternalArea  float32  `json:"internal_area"`
+	ExternalArea  float32  `json:"external_area"`
+	TotalArea     float32  `json:"total_area"`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
