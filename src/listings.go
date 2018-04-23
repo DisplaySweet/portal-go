@@ -12,6 +12,7 @@ const listingEndpoint = "listings"
 
 // Listing holds information of a listing
 type Listing struct {
+	ID            string
 	Name          string   `json:"listing_name"`
 	Availability  string   `json:"availability"`
 	Floor         string   `json:"floor"`
@@ -37,10 +38,42 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 		return nil, err
 	}
 
+	listingID, _ := setListingID(responseBytes)
+
 	listing := &Listing{}
 	err = json.Unmarshal(responseBytes, listing)
+	listing.ID = listingID
 
 	return listing, err
+}
+
+//https://stackoverflow.com/questions/17452722/how-to-get-the-key-value-from-a-json-string-in-go
+func setListingID(responseBytes []byte) (string, error) {
+	// a map container to decode the JSON structure into
+	c := make(map[string]interface{})
+
+	// unmarshal JSON
+	e := json.Unmarshal(responseBytes, &c)
+
+	// panic on error
+	if e != nil {
+		panic(e)
+	}
+
+	// a string slice to hold the keys
+	k := make([]string, len(c))
+
+	// iteration counter
+	i := 0
+
+	// copy c's keys into k
+	for s, _ := range c {
+		k[i] = s
+		i++
+	}
+
+	//just want the parent key
+	return k[0], nil
 }
 
 // GetListingByID gets a single listing by its ID
