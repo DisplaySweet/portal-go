@@ -16,7 +16,7 @@ type ProspectBuyer struct {
 	CompanyID          string `json:"company"`
 	ProjectID          string `json:"project"`
 	FIRB               int    `json:"firb"`
-	Primary            bool   `json:primary"`
+	Primary            bool   `json:"primary"`
 	OriginContactUser  string `json:"origincontactuser"`
 	OriginatingContact string `json:"originatingcontact"`
 	OriginAccountUser  string `json:"originaccountuser"`
