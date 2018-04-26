@@ -1,5 +1,13 @@
 package portal
 
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+const prospectbuyerEndpoint = "prospectbuyers"
+
 type ProspectBuyer struct {
 	ID                 string `json:"id"`
 	Phone              string `json:"phone"`
@@ -23,12 +31,60 @@ type ProspectBuyer struct {
 	OriginatingAccount string `json:"originatingaccount"`
 }
 
-//GetProspectBuyers GETs a list of ProspectBuyers that belong to the session
-func GetProspectBuyers() {
+func execRequestReturnAllProspectsBuyers(s *Session, req *http.Request) ([]*ProspectBuyer, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		return nil, err
+	}
 
+	var temp map[string]*ProspectBuyer
+
+	list := make([]*ProspectBuyer, 0, 0)
+
+	err = json.Unmarshal(responseBytes, &temp)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, prospectbuyer := range temp {
+		list = append(list, prospectbuyer)
+	}
+
+	return list, nil
+}
+
+//GetProspectBuyers GETs a list of ProspectBuyers that belong to the session
+func (s *Session) GetProspectBuyers() ([]*ProspectBuyer, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v",
+			s.Auth.PortalEndpoint,
+			prospectbuyerEndpoint),
+		nil,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return execRequestReturnAllProspectsBuyers(s, req)
 }
 
 //GetAvailableProspectBuyers GETs a list of ProspectBuyers where none of their Offers have been cancelled that belong to the session
-func GetAvailableProspectBuyers() {
+func (s *Session) GetAvailableProspectBuyers() ([]*ProspectBuyer, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/available",
+			s.Auth.PortalEndpoint,
+			prospectbuyerEndpoint),
+		nil,
+	)
 
+	if err != nil {
+		return nil, err
+	}
+
+	return execRequestReturnAllProspectsBuyers(s, req)
 }
