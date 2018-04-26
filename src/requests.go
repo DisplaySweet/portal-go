@@ -27,3 +27,12 @@ func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error
 
 	return ioutil.ReadAll(response.Body)
 }
+
+func executeRequestAndGetStatusCode(s *Session, req *http.Request) (int, error) {
+	response, err := executeRequest(s, req)
+	if err != nil {
+		return 404, err
+	}
+
+	return response.StatusCode, nil
+}
