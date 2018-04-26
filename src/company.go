@@ -9,12 +9,12 @@ import (
 
 const companyEndpoint = "companies"
 
-// Company holds information about companies
+//Company holds information about companies
 type Company struct {
 	ID                      string `json:"id"`
 	Name                    string `json:"name"`
 	Active                  bool   `json:"active"`
-	StripeAccountID         string `json:"stripeaccountid`
+	StripeAccountID         string `json:"stripeaccountid"`
 	CreatedByID             string `json:"createdbyid"`
 	CreatedDate             string `json:"createddate"`
 	CreatedBy               Agent
@@ -60,6 +60,11 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 	return company, err
 }
 
+func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Account, []*Contact, error) {
+
+	return nil, nil, nil
+}
+
 //GetAllCompanies creates the appropriate get request and calls the service function to execute and handle the request
 func (s *Session) GetAllCompanies() ([]*Company, error) {
 	req, err := http.NewRequest(
@@ -97,14 +102,17 @@ func (s *Session) GetCompanyByID(id string) (*Company, error) {
 	return execRequestReturnSingleCompany(s, req)
 }
 
+//CreateCompany POSTs a new company to the portal
 func CreateCompany() {
 
 }
 
+//UpdateCompany PUTs new company details to an existing company (using ID) in the portal
 func UpdateCompany() {
 
 }
 
+//DeleteCompany removes an existing company (using ID) from the portal
 func (c *Company) DeleteCompany(s *Session) (int, error) {
 	req, err := http.NewRequest(
 		"DELETE",
@@ -123,10 +131,26 @@ func (c *Company) DeleteCompany(s *Session) (int, error) {
 	return executeRequestAndGetStatusCode(s, req)
 }
 
-func GetCompanyAccountsAndContacts() {
+//GetCompanyAccountsAndContacts GETs all existing accounts and contacts for this company
+func (c *Company) GetCompanyAccountsAndContacts(s *Session) ([]*Account, []*Contact, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v/accountscontacts",
+			s.Auth.PortalEndpoint,
+			companyEndpoint,
+			c.ID,
+		),
+		nil,
+	)
+	if err != nil {
+		return nil, nil, err
+	}
 
+	return execRequestReturnAllAccountsContacts(s, req)
 }
 
+//AddCompanyUser adds an Agent 'user' to the company
 func (c *Company) AddCompanyUser(s *Session, a []*Agent) (int, error) {
 	body, err := json.Marshal(a)
 	if err != nil {

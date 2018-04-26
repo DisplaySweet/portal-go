@@ -11,7 +11,7 @@ type ListingActivity struct {
 
 //ListingStatusActivity handles the specifically returned JSON listing status activity
 type ListingStatusActivity struct {
-	ID        string `json: "id"`
+	ID        string `json:"id"`
 	Timestamp string `json:"timestamp"`
 	User      string `json:"user"`
 	// Status object? `json:"status"`

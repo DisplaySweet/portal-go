@@ -10,7 +10,7 @@ import (
 
 const listingEndpoint = "listings"
 
-// Listing holds information of a listing
+//Listing holds information of a listing
 type Listing struct {
 	ID            string
 	Name          string  `json:"listing_name"`
@@ -193,6 +193,7 @@ func (s *Session) GetListings() ([]*Listing, error) {
 	return execRequestReturnListings(s, req)
 }
 
+//GetActivityByID GETs all the activity data for a particular listing (using ID)
 func (s *Session) GetActivityByID(l *Listing) (*ListingActivity, error) {
 	req, err := http.NewRequest(
 		"GET",
@@ -211,6 +212,7 @@ func (s *Session) GetActivityByID(l *Listing) (*ListingActivity, error) {
 	return execRequestReturnActivity(s, req)
 }
 
+//GetAllActivity GETs all the activity for all portal listings
 func (s *Session) GetAllActivity() ([]*ListingActivity, error) {
 	req, err := http.NewRequest(
 		"GET",
@@ -228,6 +230,7 @@ func (s *Session) GetAllActivity() ([]*ListingActivity, error) {
 	return execRequestReturnAllActivity(s, req)
 }
 
+//GetAllStatusActivity GETs all listing status activity for every portal listing
 func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 	req, err := http.NewRequest(
 		"GET",
@@ -245,6 +248,7 @@ func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 	return execRequestReturnAllStatusActivity(s, req)
 }
 
+//CreateListing POSTs a new Listing to the portal
 func (l *Listing) CreateListing(s *Session) error {
 	l.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*l)
@@ -301,78 +305,84 @@ func (l *Listing) DeleteListings(s *Session) (int, error) {
 }
 
 //I guess because []*Listing isnt a defined struct itself, we cant do this?
-func (l []*Listing) BulkUpdate(s *Session) err {
-	body, err := json.Marshal(*l)
-	if err != nil {
-		return err
-	}
 
-	req, err := http.NewRequest(
-		"PUT",
-		fmt.Sprintf(
-			"%v/%v",
-			s.Auth.PortalEndpoint,
-			listingEndpoint,
-		),
-		bytes.NewReader(body),
-	)
+//WIP//
 
-	if err != nil {
-		return err
-	}
+// func (l []*Listing) BulkUpdate(s *Session) err {
+// 	body, err := json.Marshal(*l)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	response, err := executeRequest(s, req)
-	if err != nil {
-		return err
-	}
+// 	req, err := http.NewRequest(
+// 		"PUT",
+// 		fmt.Sprintf(
+// 			"%v/%v",
+// 			s.Auth.PortalEndpoint,
+// 			listingEndpoint,
+// 		),
+// 		bytes.NewReader(body),
+// 	)
 
-	switch response.StatusCode {
-	case 200:
-	case 204:
-		break
-	default:
-		return errors.New("Did not get a success code from the portal")
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	response, err := executeRequest(s, req)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	switch response.StatusCode {
+// 	case 200:
+// 	case 204:
+// 		break
+// 	default:
+// 		return errors.New("Did not get a success code from the portal")
+// 	}
+
+// 	return nil
+// }
 
 //I guess because []*Listing isnt a defined struct itself, we cant do this?
-func (l []*Listing) BulkUpdateByRole(s *Session) err {
-	body, err := json.Marshal(*l)
-	if err != nil {
-		return err
-	}
 
-	req, err := http.NewRequest(
-		"PUT",
-		fmt.Sprintf(
-			"%v/%v/bulkbyrole",
-			s.Auth.PortalEndpoint,
-			listingEndpoint,
-		),
-		bytes.NewReader(body),
-	)
+//WIP
 
-	if err != nil {
-		return err
-	}
+// func (l []*Listing) BulkUpdateByRole(s *Session) err {
+// 	body, err := json.Marshal(*l)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	response, err := executeRequest(s, req)
-	if err != nil {
-		return err
-	}
+// 	req, err := http.NewRequest(
+// 		"PUT",
+// 		fmt.Sprintf(
+// 			"%v/%v/bulkbyrole",
+// 			s.Auth.PortalEndpoint,
+// 			listingEndpoint,
+// 		),
+// 		bytes.NewReader(body),
+// 	)
 
-	switch response.StatusCode {
-	case 200:
-	case 204:
-		break
-	default:
-		return errors.New("Did not get a success code from the portal")
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	response, err := executeRequest(s, req)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	switch response.StatusCode {
+// 	case 200:
+// 	case 204:
+// 		break
+// 	default:
+// 		return errors.New("Did not get a success code from the portal")
+// 	}
+
+// 	return nil
+// }
 
 // SendUpdate saves changes to listing
 func (l *Listing) SendUpdate(s *Session) error {

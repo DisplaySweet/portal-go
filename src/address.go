@@ -1,5 +1,6 @@
 package portal
 
+//Address holds any address information
 type Address struct {
 	ID           string `json:"id"`
 	AddressLine1 string `json:"address_line_1"`

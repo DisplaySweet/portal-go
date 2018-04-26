@@ -1,5 +1,6 @@
 package portal
 
+//Agent 'User' holds the agent details
 type Agent struct {
 	ID           string `json:"id"`
 	Firstname    string `json:"firstname"`
