@@ -103,12 +103,47 @@ func (s *Session) GetCompanyByID(id string) (*Company, error) {
 }
 
 //CreateCompany POSTs a new company to the portal
-func CreateCompany() {
+func (c *Company) CreateCompany(s *Session) (*Company, error) {
+	c.ID = ""
+	body, err := json.Marshal(*c)
+	if err != nil {
+		return nil, err
+	}
 
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v",
+			s.Auth.PortalEndpoint,
+			companyEndpoint),
+		bytes.NewReader(body),
+	)
+
+	return execRequestReturnSingleCompany(s, req)
 }
 
 //UpdateCompany PUTs new company details to an existing company (using ID) in the portal
 func UpdateCompany() {
+	a.ID = "" // Make sure to blank out the ID
+	body, err := json.Marshal(*a)
+	if err != nil {
+		return 0, err
+	}
+
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v",
+			s.Auth.PortalEndpoint,
+			accountEndpoint,
+		),
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		return 0, err
+	}
+
+	return executeRequestAndGetStatusCode(s, req)
 
 }
 

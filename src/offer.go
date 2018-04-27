@@ -204,30 +204,30 @@ func (o *Offer) CompleteOffer(s *Session) (*Offer, error) {
 	return execRequestReturnSingleOffer(s, req)
 }
 
-//TODO: Unsure how this is meant to work
-//AttachDoc POSTs an attachment to the offer
-func (o *Offer) AttachDoc(s *Session) (*Offer, error) {
-	req, err := http.NewRequest(
-		"POST",
-		fmt.Sprintf(
-			"%v/%v/%v/attachments",
-			s.Auth.PortalEndpoint,
-			offerEndpoint,
-			o.ID),
-		nil,
-	)
+// //TODO: Unsure how this is meant to work
+// //AttachDoc POSTs an attachment to the offer
+// func (o *Offer) AttachDoc(s *Session) (*Offer, error) {
+// 	req, err := http.NewRequest(
+// 		"POST",
+// 		fmt.Sprintf(
+// 			"%v/%v/%v/attachments",
+// 			s.Auth.PortalEndpoint,
+// 			offerEndpoint,
+// 			o.ID),
+// 		nil,
+// 	)
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return execRequestReturnSingleAttachment(s, req)
-}
+// 	return execRequestReturnSingleAttachment(s, req)
+// }
 
-//TODO: Unsure how this is meant to work
-//DownloadOfferAttachment downloads a specific attachment on an offer give the attachment & offer id
-func DownloadOfferAttachment() {
-}
+// //TODO: Unsure how this is meant to work
+// //DownloadOfferAttachment downloads a specific attachment on an offer give the attachment & offer id
+// func DownloadOfferAttachment() {
+// }
 
 //CancelOffer sets an offer's status to cancelled and reverts a listing to available
 func (o *Offer) CancelOffer(s *Session) (*Offer, error) {
