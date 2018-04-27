@@ -24,6 +24,11 @@ type Company struct {
 	AllocationGroupAgencies []AllocationGroupAgency
 }
 
+type accountsContactsResponse struct {
+	Accounts []*Account
+	Contacts []*Contact
+}
+
 // execute the HTTP requests and get the list of companies that should come out
 func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
@@ -66,44 +71,14 @@ func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Acc
 		return nil, nil, err
 	}
 
-	var temp map[string]interface{}
+	temp := &accountsContactsResponse{}
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	account := &Account{}
-	contact := &Contact{}
-	accounts := make([]*Account, 0, 0)
-	contacts := make([]*Contact, 0, 0)
-
-	for prefix, object := range temp {
-		if prefix == "account" {
-			temp, err := json.Marshal(object)
-			if err != nil {
-				return nil, nil, err
-			}
-			err = json.Unmarshal(temp, &account)
-			if err != nil {
-				return nil, nil, err
-			}
-			accounts = append(accounts, account)
-		}
-		if prefix == "contact" {
-			temp, err := json.Marshal(object)
-			if err != nil {
-				return nil, nil, err
-			}
-			err = json.Unmarshal(temp, &contact)
-			if err != nil {
-				return nil, nil, err
-			}
-			contacts = append(contacts, contact)
-		}
-	}
-
-	return accounts, contacts, nil
+	return temp.Accounts, temp.Contacts, nil
 }
 
 //GetAllCompanies creates the appropriate get request and calls the service function to execute and handle the request
