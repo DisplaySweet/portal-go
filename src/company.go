@@ -80,11 +80,25 @@ func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Acc
 
 	for prefix, object := range temp {
 		if prefix == "account" {
-			account, err := json.Marshal(object)
+			temp, err := json.Marshal(object)
+			if err != nil {
+				return nil, nil, err
+			}
+			err = json.Unmarshal(temp, &account)
+			if err != nil {
+				return nil, nil, err
+			}
 			accounts = append(accounts, account)
 		}
 		if prefix == "contact" {
-			contact, err := json.Marshal(object)
+			temp, err := json.Marshal(object)
+			if err != nil {
+				return nil, nil, err
+			}
+			err = json.Unmarshal(temp, &contact)
+			if err != nil {
+				return nil, nil, err
+			}
 			contacts = append(contacts, contact)
 		}
 	}
