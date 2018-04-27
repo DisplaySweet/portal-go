@@ -61,8 +61,35 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 }
 
 func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Account, []*Contact, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		return nil, nil, err
+	}
 
-	return nil, nil, nil
+	var temp map[string]interface{}
+
+	err = json.Unmarshal(responseBytes, &temp)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	account := &Account{}
+	contact := &Contact{}
+	accounts := make([]*Account, 0, 0)
+	contacts := make([]*Contact, 0, 0)
+
+	for prefix, object := range temp {
+		if prefix == "account" {
+			account, err := json.Marshal(object)
+			accounts = append(accounts, account)
+		}
+		if prefix == "contact" {
+			contact, err := json.Marshal(object)
+			contacts = append(contacts, contact)
+		}
+	}
+
+	return accounts, contacts, nil
 }
 
 //GetAllCompanies creates the appropriate get request and calls the service function to execute and handle the request
