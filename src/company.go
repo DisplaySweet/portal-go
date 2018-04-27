@@ -123,19 +123,19 @@ func (c *Company) CreateCompany(s *Session) (*Company, error) {
 }
 
 //UpdateCompany PUTs new company details to an existing company (using ID) in the portal
-func UpdateCompany() {
-	a.ID = "" // Make sure to blank out the ID
-	body, err := json.Marshal(*a)
+func (c *Company) UpdateCompany(s *Session) (int, error) {
+	body, err := json.Marshal(*c)
 	if err != nil {
 		return 0, err
 	}
 
 	req, err := http.NewRequest(
-		"POST",
+		"PUT",
 		fmt.Sprintf(
-			"%v/%v",
+			"%v/%v/%v",
 			s.Auth.PortalEndpoint,
 			accountEndpoint,
+			c.ID,
 		),
 		bytes.NewReader(body),
 	)
@@ -144,7 +144,6 @@ func UpdateCompany() {
 	}
 
 	return executeRequestAndGetStatusCode(s, req)
-
 }
 
 //DeleteCompany removes an existing company (using ID) from the portal
