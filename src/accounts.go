@@ -27,6 +27,7 @@ type Account struct {
 	Agent           Agent
 	Notes           string `json:""`
 	AccountContacts []AccountContact
+	s               *Session
 }
 
 func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, error) {
@@ -45,6 +46,7 @@ func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, er
 	}
 
 	for _, account := range temp {
+		account.s = s
 		list = append(list, account)
 	}
 
@@ -59,6 +61,7 @@ func execRequestReturnSingleAccount(s *Session, req *http.Request) (*Account, er
 
 	account := &Account{}
 	err = json.Unmarshal(responseBytes, account)
+	account.s = s
 
 	return account, err
 }
@@ -145,14 +148,14 @@ func (s *Session) GetAccount(id string) (*Account, error) {
 }
 
 //GetAccountContacts GETs a list of AccountContacts that belong to the Account, using their ID
-func (s *Session) GetAccountContacts(id string) ([]*AccountContact, error) {
+func (a *Account) GetOwnedContacts() ([]*AccountContact, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/contacts",
-			s.Auth.PortalEndpoint,
+			a.s.Auth.PortalEndpoint,
 			accountEndpoint,
-			id),
+			a.ID),
 		nil,
 	)
 
@@ -160,18 +163,18 @@ func (s *Session) GetAccountContacts(id string) ([]*AccountContact, error) {
 		return nil, err
 	}
 
-	return execRequestReturnAllAccountContacts(s, req)
+	return execRequestReturnAllAccountContacts(a.s, req)
 }
 
 //GetAccountDeposits GETs a list of all DepositResponses belonging to the Account, using their ID
-func (s *Session) GetAccountDeposits(id string) ([]*Deposit, error) {
+func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/deposits",
-			s.Auth.PortalEndpoint,
+			a.s.Auth.PortalEndpoint,
 			accountEndpoint,
-			id),
+			a.ID),
 		nil,
 	)
 
@@ -179,13 +182,13 @@ func (s *Session) GetAccountDeposits(id string) ([]*Deposit, error) {
 		return nil, err
 	}
 
-	return execRequestReturnAllAccountDeposits(s, req)
+	return execRequestReturnAllAccountDeposits(a.s, req)
 }
 
 //CreateAccount POSTs a new Account to the portal
-func (a *Account) CreateAccount(s *Session) (int, error) {
-	a.ID = "" // Make sure to blank out the ID
-	body, err := json.Marshal(*a)
+func (s *Session) CreateAccount(account *Account) (int, error) {
+	account.ID = "" // Make sure to blank out the ID
+	body, err := json.Marshal(*account)
 	if err != nil {
 		return 0, err
 	}
@@ -207,7 +210,7 @@ func (a *Account) CreateAccount(s *Session) (int, error) {
 }
 
 //UpdateAccount PUTs new Account data to an existing Account, using their ID
-func (a *Account) UpdateAccount(s *Session) (int, error) {
+func (a *Account) Update() (int, error) {
 	body, err := json.Marshal(*a)
 	if err != nil {
 		return 0, err
@@ -217,7 +220,7 @@ func (a *Account) UpdateAccount(s *Session) (int, error) {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			a.s.Auth.PortalEndpoint,
 			accountEndpoint,
 			a.ID,
 		),
@@ -227,11 +230,11 @@ func (a *Account) UpdateAccount(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(a.s, req)
 }
 
-//DeleteAccount DELETEs an Account, using their ID
-func (a *Account) DeleteAccount(s *Session) (int, error) {
+//Delete DELETEs an Account, using their ID
+func (a *Account) Delete() (int, error) {
 	body, err := json.Marshal(*a)
 	if err != nil {
 		return 0, err
@@ -241,7 +244,7 @@ func (a *Account) DeleteAccount(s *Session) (int, error) {
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			a.s.Auth.PortalEndpoint,
 			accountEndpoint,
 			a.ID,
 		),
@@ -251,11 +254,11 @@ func (a *Account) DeleteAccount(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(a.s, req)
 }
 
-//BulkDeleteAccounts DELETEs Accounts using a list of Account IDs
-func (s *Session) BulkDeleteAccounts(list []*Account) (int, error) {
+//Delete DELETEs Accounts using a list of Account IDs
+func (s *Session) Delete(list []*Account) (int, error) {
 	body, err := json.Marshal(list)
 	if err != nil {
 		return 0, err

@@ -22,6 +22,7 @@ type Event struct {
 	TZInfo      string `json:"timezoneinfoid"`
 	Dates       []EventDate
 	ArchivedOn  string `json:"archivedon"`
+	s           *Session
 }
 
 func execRequestReturnAllEvents(s *Session, req *http.Request) ([]*Event, error) {
@@ -40,6 +41,7 @@ func execRequestReturnAllEvents(s *Session, req *http.Request) ([]*Event, error)
 	}
 
 	for _, event := range temp {
+		event.s = s
 		list = append(list, event)
 	}
 
@@ -54,6 +56,7 @@ func execRequestReturnSingleEvent(s *Session, req *http.Request) (*Event, error)
 
 	event := &Event{}
 	err = json.Unmarshal(responseBytes, event)
+	event.s = s
 
 	return event, err
 }
@@ -94,7 +97,7 @@ func (s *Session) GetEventByID(id string) (*Event, error) {
 }
 
 //CreateEvent POSTs new event data to the endpoint
-func (e *Event) CreateEvent(s *Session) (int, error) {
+func (s *Session) CreateEvent(e *Event) (int, error) {
 	e.ID = ""
 	body, err := json.Marshal(*e)
 	if err != nil {
@@ -118,7 +121,7 @@ func (e *Event) CreateEvent(s *Session) (int, error) {
 }
 
 //UpdateEventByID PUTs new data to an existing event using it's ID
-func (e *Event) UpdateEventByID(s *Session) (int, error) {
+func (e *Event) Update() (int, error) {
 	body, err := json.Marshal(*e)
 	if err != nil {
 		return 0, err
@@ -128,7 +131,7 @@ func (e *Event) UpdateEventByID(s *Session) (int, error) {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			e.s.Auth.PortalEndpoint,
 			eventEndpoint,
 			e.ID,
 		),
@@ -138,16 +141,16 @@ func (e *Event) UpdateEventByID(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(e.s, req)
 }
 
 //DeleteEventByID DELETEs an existing event using it's ID
-func (e *Event) DeleteEventByID(s *Session) (int, error) {
+func (e *Event) Delete() (int, error) {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			e.s.Auth.PortalEndpoint,
 			eventEndpoint,
 			e.ID,
 		),
@@ -157,5 +160,5 @@ func (e *Event) DeleteEventByID(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(e.s, req)
 }

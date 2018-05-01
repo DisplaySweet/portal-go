@@ -27,6 +27,7 @@ type Offer struct {
 	FundsReceived          float64
 	Status                 string
 	OfferStatusChangedDate string
+	s                      *Session
 }
 
 func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error) {
@@ -45,6 +46,7 @@ func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error)
 	}
 
 	for _, offer := range temp {
+		offer.s = s
 		list = append(list, offer)
 	}
 
@@ -59,6 +61,7 @@ func execRequestReturnSingleOffer(s *Session, req *http.Request) (*Offer, error)
 
 	offer := &Offer{}
 	err = json.Unmarshal(responseBytes, offer)
+	offer.s = s
 
 	return offer, err
 }
@@ -118,14 +121,14 @@ func (s *Session) GetCompletedOffers() ([]*Offer, error) {
 }
 
 //GetOfferByID returns a single offer given the offer ID
-func (s *Session) GetOfferByID(id string) (*Offer, error) {
+func (o *Offer) GetOfferByID() (*Offer, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			o.s.Auth.PortalEndpoint,
 			offerEndpoint,
-			id),
+			o.ID),
 		nil,
 	)
 
@@ -133,11 +136,11 @@ func (s *Session) GetOfferByID(id string) (*Offer, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleOffer(s, req)
+	return execRequestReturnSingleOffer(o.s, req)
 }
 
 //CreateOffer POSTs a new offer and reserves the relevant listing
-func (o *Offer) CreateOffer(s *Session) (*Offer, error) {
+func (s *Session) CreateOffer(o *Offer) (*Offer, error) {
 	o.ID = ""
 	body, err := json.Marshal(*o)
 	if err != nil {
@@ -162,7 +165,7 @@ func (o *Offer) CreateOffer(s *Session) (*Offer, error) {
 }
 
 //UpdateOffer PUTs new data to an existing offer, using an offer ID
-func (o *Offer) UpdateOffer(s *Session) (*Offer, error) {
+func (o *Offer) Update() (*Offer, error) {
 	body, err := json.Marshal(*o)
 	if err != nil {
 		return nil, err
@@ -172,7 +175,7 @@ func (o *Offer) UpdateOffer(s *Session) (*Offer, error) {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			o.s.Auth.PortalEndpoint,
 			offerEndpoint,
 			o.ID),
 		bytes.NewReader(body),
@@ -182,16 +185,16 @@ func (o *Offer) UpdateOffer(s *Session) (*Offer, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleOffer(s, req)
+	return execRequestReturnSingleOffer(o.s, req)
 }
 
 //CompleteOffer PUTs new data to an existing offer, changing the offer status to complete and the relevant listing to sold.
-func (o *Offer) CompleteOffer(s *Session) (*Offer, error) {
+func (o *Offer) Complete() (*Offer, error) {
 	req, err := http.NewRequest(
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v/compelete",
-			s.Auth.PortalEndpoint,
+			o.s.Auth.PortalEndpoint,
 			offerEndpoint,
 			o.ID),
 		nil,
@@ -201,7 +204,7 @@ func (o *Offer) CompleteOffer(s *Session) (*Offer, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleOffer(s, req)
+	return execRequestReturnSingleOffer(o.s, req)
 }
 
 // //TODO: Unsure how this is meant to work
@@ -230,12 +233,12 @@ func (o *Offer) CompleteOffer(s *Session) (*Offer, error) {
 // }
 
 //CancelOffer sets an offer's status to cancelled and reverts a listing to available
-func (o *Offer) CancelOffer(s *Session) (*Offer, error) {
+func (o *Offer) Cancel() (*Offer, error) {
 	req, err := http.NewRequest(
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v/cancel",
-			s.Auth.PortalEndpoint,
+			o.s.Auth.PortalEndpoint,
 			offerEndpoint,
 			o.ID),
 		nil,
@@ -245,5 +248,5 @@ func (o *Offer) CancelOffer(s *Session) (*Offer, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleOffer(s, req)
+	return execRequestReturnSingleOffer(o.s, req)
 }

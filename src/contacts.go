@@ -25,6 +25,7 @@ type Contact struct {
 	Address     Address `json:"address"`
 	AgentID     string  `json:"agentid"`
 	ManageByID  string  `json:"managebyid"`
+	s           *Session
 }
 
 // execute the HTTP requests and get the single Contact that should come out
@@ -104,12 +105,15 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 
 	var response []*Contact
 	err = json.Unmarshal(responseBytes, response)
+	for _, contact := range response {
+		contact.s = s
+	}
 
 	return response, err
 }
 
 // SendUpdate saves changes made to contact
-func (c *Contact) SendUpdate(s *Session) error {
+func (c *Contact) SendUpdate() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
 		return err
@@ -119,7 +123,7 @@ func (c *Contact) SendUpdate(s *Session) error {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			contactEndpoint,
 			c.ID,
 		),
@@ -130,7 +134,7 @@ func (c *Contact) SendUpdate(s *Session) error {
 		return err
 	}
 
-	response, err := executeRequest(s, req)
+	response, err := executeRequest(c.s, req)
 	if err != nil {
 		return err
 	}
@@ -147,7 +151,8 @@ func (c *Contact) SendUpdate(s *Session) error {
 }
 
 // Create generates a new contact from the supplied data
-func (c *Contact) Create(s *Session) error {
+// Create should return the contact that was just created.
+func (s *Session) CreateContact(c *Contact) error {
 	c.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*c)
 	if err != nil {
@@ -182,3 +187,7 @@ func (c *Contact) Create(s *Session) error {
 
 	return nil
 }
+
+// func (s *Session) Create(contact Contact) error {
+
+// }

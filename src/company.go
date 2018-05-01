@@ -22,6 +22,7 @@ type Company struct {
 	UserCompanies           []UserCompany
 	Events                  []Event
 	AllocationGroupAgencies []AllocationGroupAgency
+	s                       *Session
 }
 
 type accountsContactsResponse struct {
@@ -46,6 +47,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 	}
 
 	for _, company := range temp {
+		company.s = s
 		list = append(list, company)
 	}
 
@@ -61,6 +63,7 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 
 	company := &Company{}
 	err = json.Unmarshal(responseBytes, company)
+	company.s = s
 
 	return company, err
 }
@@ -100,14 +103,14 @@ func (s *Session) GetAllCompanies() ([]*Company, error) {
 }
 
 //GetCompanyByID creates the appropriate get request and calls the service function to execute and handle the request
-func (s *Session) GetCompanyByID(id string) (*Company, error) {
+func (c *Company) GetByID() (*Company, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			companyEndpoint,
-			id),
+			c.ID),
 		nil,
 	)
 
@@ -115,13 +118,13 @@ func (s *Session) GetCompanyByID(id string) (*Company, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleCompany(s, req)
+	return execRequestReturnSingleCompany(c.s, req)
 }
 
 //CreateCompany POSTs a new company to the portal
-func (c *Company) CreateCompany(s *Session) (*Company, error) {
-	c.ID = ""
-	body, err := json.Marshal(*c)
+func (s *Session) CreateCompany(company *Company) (*Company, error) {
+	company.ID = ""
+	body, err := json.Marshal(*company)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +142,7 @@ func (c *Company) CreateCompany(s *Session) (*Company, error) {
 }
 
 //UpdateCompany PUTs new company details to an existing company (using ID) in the portal
-func (c *Company) UpdateCompany(s *Session) (int, error) {
+func (c *Company) Update() (int, error) {
 	body, err := json.Marshal(*c)
 	if err != nil {
 		return 0, err
@@ -149,7 +152,7 @@ func (c *Company) UpdateCompany(s *Session) (int, error) {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			accountEndpoint,
 			c.ID,
 		),
@@ -159,16 +162,16 @@ func (c *Company) UpdateCompany(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(c.s, req)
 }
 
 //DeleteCompany removes an existing company (using ID) from the portal
-func (c *Company) DeleteCompany(s *Session) (int, error) {
+func (c *Company) Delete() (int, error) {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -178,16 +181,16 @@ func (c *Company) DeleteCompany(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(c.s, req)
 }
 
 //GetCompanyAccountsAndContacts GETs all existing accounts and contacts for this company
-func (c *Company) GetCompanyAccountsAndContacts(s *Session) ([]*Account, []*Contact, error) {
+func (c *Company) GetAccountsAndContacts() ([]*Account, []*Contact, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/accountscontacts",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -197,11 +200,11 @@ func (c *Company) GetCompanyAccountsAndContacts(s *Session) ([]*Account, []*Cont
 		return nil, nil, err
 	}
 
-	return execRequestReturnAllAccountsContacts(s, req)
+	return execRequestReturnAllAccountsContacts(c.s, req)
 }
 
 //AddCompanyUser adds an Agent 'user' to the company
-func (c *Company) AddCompanyUser(s *Session, a []*Agent) (int, error) {
+func (c *Company) AddUser(a []*Agent) (int, error) {
 	body, err := json.Marshal(a)
 	if err != nil {
 		return 0, err
@@ -211,7 +214,7 @@ func (c *Company) AddCompanyUser(s *Session, a []*Agent) (int, error) {
 		"POST",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			c.s.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -221,5 +224,5 @@ func (c *Company) AddCompanyUser(s *Session, a []*Agent) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(c.s, req)
 }

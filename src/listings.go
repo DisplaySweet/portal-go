@@ -28,6 +28,7 @@ type Listing struct {
 	InternalArea  float32 `json:"internal_area"`
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
+	s             *Session
 }
 
 // execute the HTTP requests and get the single Listing that should come out
@@ -47,6 +48,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 	var v *Listing
 	for k, v := range temp {
 		v.ID = k
+		v.s = s
 	}
 
 	return v, nil
@@ -70,6 +72,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 
 	for id, listing := range temp {
 		listing.ID = id
+		listing.s = s
 		list = append(list, listing)
 	}
 
@@ -249,7 +252,7 @@ func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 }
 
 //CreateListing POSTs a new Listing to the portal
-func (l *Listing) CreateListing(s *Session) error {
+func (s *Session) CreateListing(l *Listing) error {
 	l.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*l)
 	if err != nil {
@@ -286,12 +289,12 @@ func (l *Listing) CreateListing(s *Session) error {
 }
 
 //DeleteListings removes the referenced listing from Listings
-func (l *Listing) DeleteListings(s *Session) (int, error) {
+func (l *Listing) Delete() (int, error) {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			s.Auth.PortalEndpoint,
+			l.s.Auth.PortalEndpoint,
 			listingEndpoint,
 			l.ID,
 		),
@@ -301,7 +304,7 @@ func (l *Listing) DeleteListings(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(l.s, req)
 }
 
 //I guess because []*Listing isnt a defined struct itself, we cant do this?
@@ -385,7 +388,7 @@ func (l *Listing) DeleteListings(s *Session) (int, error) {
 // }
 
 // SendUpdate saves changes to listing
-func (l *Listing) SendUpdate(s *Session) error {
+func (l *Listing) Update() error {
 	body, err := json.Marshal(*l)
 	if err != nil {
 		return err
@@ -395,7 +398,7 @@ func (l *Listing) SendUpdate(s *Session) error {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v/byrole",
-			s.Auth.PortalEndpoint,
+			l.s.Auth.PortalEndpoint,
 			listingEndpoint,
 			l.ID,
 		),
@@ -406,7 +409,7 @@ func (l *Listing) SendUpdate(s *Session) error {
 		return err
 	}
 
-	response, err := executeRequest(s, req)
+	response, err := executeRequest(l.s, req)
 	if err != nil {
 		return err
 	}
