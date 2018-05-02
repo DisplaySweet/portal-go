@@ -7,26 +7,31 @@ import (
 //A space for testing the logic and the functionality of the portal pkg
 
 func checkAccounts() {
+	//Initialise an account with any data
 	account := portal.Account{
 		AccountName: "Mr. Account",
 		Email:       "mraccount@email.domain",
 	}
 
+	//Check and confirm the functionality available to an account
 	accContacts, err := account.GetOwnedContacts()
 	if err != nil {
 		println(err)
 	}
 	println(accContacts)
+
 	accDeposits, err := account.GetOwnedDeposits()
 	if err != nil {
 		println(err)
 	}
 	println(accDeposits)
+
 	statusCode, err := account.Update()
 	if err != nil {
 		println(err)
 	}
 	println(statusCode)
+
 	statusCode, err = account.Delete()
 	if err != nil {
 		println(err)
@@ -35,17 +40,43 @@ func checkAccounts() {
 }
 
 func checkCompanies() {
+	//Initialise a company object with any data
 	company := portal.Company{
 		Name:   "A Real Company",
 		Active: true,
 	}
 
-	accounts, contacts, err := company.GetAccountsAndContacts()
+	//Init an agent for use in a method below
+	agent := &portal.Agent{}
+	agents := []*portal.Agent{
+		agent,
+	}
+
+	//Check and confirm the functionality available to the company object
+	accounts, contacts, err := company.GetAccountsContacts()
 	if err != nil {
 		println(err)
 	}
 	println(accounts)
 	println(contacts)
+
+	statusCode, err := company.AddUsers(agents)
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
+
+	statusCode, err = company.Delete()
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
+
+	statusCode, err = company.Update()
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
 }
 
 func checkContacts() {
@@ -58,6 +89,7 @@ func checkContacts() {
 	if err != nil {
 		println(err)
 	}
+
 }
 
 func checkEvents() {
@@ -71,11 +103,13 @@ func checkEvents() {
 		println(err)
 	}
 	println(statusCode)
+
 	statusCode, err = event.Delete()
 	if err != nil {
 		println(err)
 	}
 	println(statusCode)
+
 }
 
 //Listing is missing a lot of functionality
@@ -91,11 +125,13 @@ func checkListings() {
 	if err != nil {
 		println(err)
 	}
+
 	statusCode, err := listing.Delete()
 	if err != nil {
 		println(err)
 	}
 	println(statusCode)
+
 }
 
 func checkOffer() {
@@ -110,11 +146,13 @@ func checkOffer() {
 		println(err)
 	}
 	println(completedOffer)
+
 	cancelledOffer, err := offer.Cancel()
 	if err != nil {
 		println(err)
 	}
 	println(cancelledOffer)
+
 	updatedOffer, err := offer.Update()
 	if err != nil {
 		println(err)
@@ -133,11 +171,13 @@ func checkProspects() {
 		println(err)
 	}
 	println(statusCode)
-	statusCode, err = prospect.UpdateProspect()
+
+	statusCode, err = prospect.Update()
 	if err != nil {
 		println(err)
 	}
 	println(statusCode)
+
 	statusCode, err = prospect.UpdateSchedule(schedule)
 	if err != nil {
 		println(err)

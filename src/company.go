@@ -184,8 +184,8 @@ func (c *Company) Delete() (int, error) {
 	return executeRequestAndGetStatusCode(c.s, req)
 }
 
-//GetCompanyAccountsAndContacts GETs all existing accounts and contacts for this company
-func (c *Company) GetAccountsAndContacts() ([]*Account, []*Contact, error) {
+//GetCompanyAccountsContacts GETs all existing accounts and contacts for this company
+func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(

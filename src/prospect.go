@@ -87,7 +87,7 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 //func (s *Session) GetAllEventsForDate() (e []*Event)
 
 //UpdateProspect PUTs updates a prospect with new data, using the prospect object
-func (p *Prospect) UpdateProspect() (int, error) {
+func (p *Prospect) Update() (int, error) {
 	body, err := json.Marshal(*p)
 	if err != nil {
 		return 0, nil
