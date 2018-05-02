@@ -142,10 +142,10 @@ func (s *Session) CreateCompany(company *Company) (*Company, error) {
 }
 
 //UpdateCompany PUTs new company details to an existing company (using ID) in the portal
-func (c *Company) Update() (int, error) {
+func (c *Company) Update() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -159,14 +159,15 @@ func (c *Company) Update() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.s, req)
+
 }
 
 //DeleteCompany removes an existing company (using ID) from the portal
-func (c *Company) Delete() (int, error) {
+func (c *Company) Delete() error {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
@@ -178,10 +179,11 @@ func (c *Company) Delete() (int, error) {
 		nil,
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.s, req)
+
 }
 
 //GetCompanyAccountsContacts GETs all existing accounts and contacts for this company
@@ -204,10 +206,10 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 }
 
 //AddCompanyUser adds an Agent 'user' to the company
-func (c *Company) AddUser(a []*Agent) (int, error) {
+func (c *Company) AddUsers(a []*Agent) error {
 	body, err := json.Marshal(a)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -221,8 +223,9 @@ func (c *Company) AddUser(a []*Agent) (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.s, req)
+
 }

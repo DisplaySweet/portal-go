@@ -59,11 +59,11 @@ func (s *Session) GetSolicitor() (*ProspectSolicitor, error) {
 }
 
 //Create POSTs new solicitor information to a Prospect
-func (ps *ProspectSolicitor) Create() (int, error) {
+func (ps *ProspectSolicitor) Create() error {
 	ps.ID = ""
 	body, err := json.Marshal(*ps)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -76,17 +76,17 @@ func (ps *ProspectSolicitor) Create() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(ps.s, req)
+	return executeRequestAndParseStatusCode(ps.s, req)
 }
 
 //Update PUTs new information to an existing solicitor
-func (ps *ProspectSolicitor) Update() (int, error) {
+func (ps *ProspectSolicitor) Update() error {
 	body, err := json.Marshal(*ps)
 	if err != nil {
-		return 0, nil
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -99,10 +99,10 @@ func (ps *ProspectSolicitor) Update() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(ps.s, req)
+	return executeRequestAndParseStatusCode(ps.s, req)
 }
 
 // //Delete DELETEs a solicitor from a prospect EOI RELATED

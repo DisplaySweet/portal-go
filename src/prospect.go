@@ -87,10 +87,10 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 //func (s *Session) GetAllEventsForDate() (e []*Event)
 
 //UpdateProspect PUTs updates a prospect with new data, using the prospect object
-func (p *Prospect) Update() (int, error) {
+func (p *Prospect) Update() error {
 	body, err := json.Marshal(*p)
 	if err != nil {
-		return 0, nil
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -102,14 +102,18 @@ func (p *Prospect) Update() (int, error) {
 		),
 		bytes.NewReader(body),
 	)
-	return executeRequestAndGetStatusCode(p.s, req)
+	if err != nil {
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(p.s, req)
 }
 
 //UpdateAgent POSTs a newly assigned Agent to the Prospect
-func (p *Prospect) UpdateAgent(a *Agent) (int, error) {
+func (p *Prospect) UpdateAgent(a *Agent) error {
 	body, err := json.Marshal(*a)
 	if err != nil {
-		return 0, nil
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -122,14 +126,18 @@ func (p *Prospect) UpdateAgent(a *Agent) (int, error) {
 		),
 		bytes.NewReader(body),
 	)
-	return executeRequestAndGetStatusCode(p.s, req)
+	if err != nil {
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(p.s, req)
 }
 
 //UpdateSchedule updates the schedules assigned to a prospect
-func (p *Prospect) UpdateSchedule(s *Schedule) (int, error) {
+func (p *Prospect) UpdateSchedule(s *Schedule) error {
 	body, err := json.Marshal(*s)
 	if err != nil {
-		return 0, nil
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -142,5 +150,9 @@ func (p *Prospect) UpdateSchedule(s *Schedule) (int, error) {
 		),
 		bytes.NewReader(body),
 	)
-	return executeRequestAndGetStatusCode(p.s, req)
+	if err != nil {
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(p.s, req)
 }

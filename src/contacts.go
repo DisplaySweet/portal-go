@@ -3,7 +3,6 @@ package portal
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 )
@@ -134,19 +133,10 @@ func (c *Contact) SendUpdate() error {
 		return err
 	}
 
-	response, err := executeRequest(c.s, req)
+	err = executeRequestAndParseStatusCode(c.s, req)
 	if err != nil {
 		return err
 	}
-
-	switch response.StatusCode {
-	case 200:
-	case 204:
-		break
-	default:
-		return errors.New("Did not get a success code from the portal")
-	}
-
 	return nil
 }
 
@@ -173,21 +163,9 @@ func (s *Session) CreateContact(c *Contact) error {
 		return err
 	}
 
-	response, err := executeRequest(s, req)
+	err = executeRequestAndParseStatusCode(s, req)
 	if err != nil {
 		return err
 	}
-
-	switch response.StatusCode {
-	case 204:
-		break
-	default:
-		return errors.New("Not implemented")
-	}
-
 	return nil
 }
-
-// func (s *Session) Create(contact Contact) error {
-
-// }

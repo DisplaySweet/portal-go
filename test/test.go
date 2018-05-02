@@ -89,7 +89,6 @@ func checkContacts() {
 	if err != nil {
 		println(err)
 	}
-
 }
 
 func checkEvents() {

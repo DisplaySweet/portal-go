@@ -139,45 +139,6 @@ func execRequestReturnAllStatusActivity(s *Session, req *http.Request) ([]*Listi
 	return list, nil
 }
 
-// // GetListingByID gets a single listing by its ID
-// func (s *Session) GetListingByID(id string) (*Listing, error) {
-// 	req, err := http.NewRequest(
-// 		"GET",
-// 		fmt.Sprintf(
-// 			"%v/%v/%v",
-// 			s.Auth.PortalEndpoint,
-// 			listingEndpoint,
-// 			id,
-// 		),
-// 		nil)
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return execRequestReturnSingleListing(s, req)
-// }
-
-// // GetListingByName gets a single listing by its name
-// func (s *Session) GetListingByName(name string) (*Listing, error) {
-// 	req, err := http.NewRequest(
-// 		"GET",
-// 		fmt.Sprintf(
-// 			"%v/%v?name=%v",
-// 			s.Auth.PortalEndpoint,
-// 			listingEndpoint,
-// 			name,
-// 		),
-// 		nil,
-// 	)
-
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return execRequestReturnSingleListing(s, req)
-// }
-
 //GetListings returns a slice of all Listing
 func (s *Session) GetListings() ([]*Listing, error) {
 	req, err := http.NewRequest(
@@ -289,7 +250,7 @@ func (s *Session) CreateListing(l *Listing) error {
 }
 
 //DeleteListings removes the referenced listing from Listings
-func (l *Listing) Delete() (int, error) {
+func (l *Listing) Delete() error {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
@@ -301,10 +262,10 @@ func (l *Listing) Delete() (int, error) {
 		nil,
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(l.s, req)
+	return executeRequestAndParseStatusCode(l.s, req)
 }
 
 //I guess because []*Listing isnt a defined struct itself, we cant do this?
@@ -409,18 +370,9 @@ func (l *Listing) Update() error {
 		return err
 	}
 
-	response, err := executeRequest(l.s, req)
+	err = executeRequestAndParseStatusCode(l.s, req)
 	if err != nil {
 		return err
 	}
-
-	switch response.StatusCode {
-	case 200:
-	case 204:
-		break
-	default:
-		return errors.New("Did not get a success code from the portal")
-	}
-
 	return nil
 }

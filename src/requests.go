@@ -1,6 +1,7 @@
 package portal
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -28,11 +29,19 @@ func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error
 	return ioutil.ReadAll(response.Body)
 }
 
-func executeRequestAndGetStatusCode(s *Session, req *http.Request) (int, error) {
+func executeRequestAndParseStatusCode(s *Session, req *http.Request) error {
 	response, err := executeRequest(s, req)
 	if err != nil {
-		return 404, err
+		return err
 	}
 
-	return response.StatusCode, nil
+	switch response.StatusCode {
+	case 200:
+	case 204:
+		break
+	default:
+		return errors.New("Not implemented")
+	}
+
+	return nil
 }

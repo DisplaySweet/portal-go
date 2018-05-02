@@ -186,11 +186,11 @@ func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
 }
 
 //CreateAccount POSTs a new Account to the portal
-func (s *Session) CreateAccount(account *Account) (int, error) {
+func (s *Session) CreateAccount(account *Account) error {
 	account.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*account)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -203,17 +203,17 @@ func (s *Session) CreateAccount(account *Account) (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndParseStatusCode(s, req)
 }
 
 //UpdateAccount PUTs new Account data to an existing Account, using their ID
-func (a *Account) Update() (int, error) {
+func (a *Account) Update() error {
 	body, err := json.Marshal(*a)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -227,17 +227,18 @@ func (a *Account) Update() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(a.s, req)
+	return executeRequestAndParseStatusCode(a.s, req)
+
 }
 
 //Delete DELETEs an Account, using their ID
-func (a *Account) Delete() (int, error) {
+func (a *Account) Delete() error {
 	body, err := json.Marshal(*a)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -251,17 +252,18 @@ func (a *Account) Delete() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(a.s, req)
+	return executeRequestAndParseStatusCode(a.s, req)
+
 }
 
 //Delete DELETEs Accounts using a list of Account IDs
-func (s *Session) Delete(list []*Account) (int, error) {
+func (s *Session) Delete(list []*Account) error {
 	body, err := json.Marshal(list)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -274,8 +276,8 @@ func (s *Session) Delete(list []*Account) (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndParseStatusCode(s, req)
 }

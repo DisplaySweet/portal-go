@@ -97,11 +97,11 @@ func (s *Session) GetEventByID(id string) (*Event, error) {
 }
 
 //CreateEvent POSTs new event data to the endpoint
-func (s *Session) CreateEvent(e *Event) (int, error) {
+func (s *Session) CreateEvent(e *Event) error {
 	e.ID = ""
 	body, err := json.Marshal(*e)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -114,17 +114,18 @@ func (s *Session) CreateEvent(e *Event) (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndParseStatusCode(s, req)
+
 }
 
 //UpdateEventByID PUTs new data to an existing event using it's ID
-func (e *Event) Update() (int, error) {
+func (e *Event) Update() error {
 	body, err := json.Marshal(*e)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := http.NewRequest(
@@ -138,14 +139,15 @@ func (e *Event) Update() (int, error) {
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(e.s, req)
+	return executeRequestAndParseStatusCode(e.s, req)
+
 }
 
 //DeleteEventByID DELETEs an existing event using it's ID
-func (e *Event) Delete() (int, error) {
+func (e *Event) Delete() error {
 	req, err := http.NewRequest(
 		"DELETE",
 		fmt.Sprintf(
@@ -157,8 +159,9 @@ func (e *Event) Delete() (int, error) {
 		nil,
 	)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return executeRequestAndGetStatusCode(e.s, req)
+	return executeRequestAndParseStatusCode(e.s, req)
+
 }
