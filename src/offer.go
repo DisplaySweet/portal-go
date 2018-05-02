@@ -121,14 +121,14 @@ func (s *Session) GetCompletedOffers() ([]*Offer, error) {
 }
 
 //GetOfferByID returns a single offer given the offer ID
-func (o *Offer) GetOfferByID() (*Offer, error) {
+func (s *Session) GetOfferByID(id string) (*Offer, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			o.s.Auth.PortalEndpoint,
+			s.Auth.PortalEndpoint,
 			offerEndpoint,
-			o.ID),
+			id),
 		nil,
 	)
 
@@ -136,7 +136,7 @@ func (o *Offer) GetOfferByID() (*Offer, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleOffer(o.s, req)
+	return execRequestReturnSingleOffer(s, req)
 }
 
 //CreateOffer POSTs a new offer and reserves the relevant listing

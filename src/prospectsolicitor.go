@@ -25,6 +25,7 @@ type ProspectSolicitor struct {
 	Address     Address
 	CompanyID   string
 	ProjectID   string
+	s           *Session
 }
 
 func execRequestReturnSingleProspectSolicitor(s *Session, req *http.Request) (*ProspectSolicitor, error) {
@@ -57,8 +58,8 @@ func (s *Session) GetSolicitor() (*ProspectSolicitor, error) {
 	return execRequestReturnSingleProspectSolicitor(s, req)
 }
 
-//CreateSolicitor POSTs new solicitor information to a Prospect
-func (ps *ProspectSolicitor) CreateSolicitor(s *Session) (int, error) {
+//Create POSTs new solicitor information to a Prospect
+func (ps *ProspectSolicitor) Create() (int, error) {
 	ps.ID = ""
 	body, err := json.Marshal(*ps)
 	if err != nil {
@@ -69,7 +70,7 @@ func (ps *ProspectSolicitor) CreateSolicitor(s *Session) (int, error) {
 		"POST",
 		fmt.Sprintf(
 			"%v/%v",
-			s.Auth.PortalEndpoint,
+			ps.s.Auth.PortalEndpoint,
 			prospectsolicitorEndpoint,
 		),
 		bytes.NewReader(body),
@@ -78,15 +79,46 @@ func (ps *ProspectSolicitor) CreateSolicitor(s *Session) (int, error) {
 		return 0, err
 	}
 
-	return executeRequestAndGetStatusCode(s, req)
+	return executeRequestAndGetStatusCode(ps.s, req)
 }
 
-//UpdateSolicitor PUTs new information to an existing solicitor
-func (ps *ProspectSolicitor) UpdateSolicitor() {
+//Update PUTs new information to an existing solicitor
+func (ps *ProspectSolicitor) Update() (int, error) {
+	body, err := json.Marshal(*ps)
+	if err != nil {
+		return 0, nil
+	}
 
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v",
+			ps.s.Auth.PortalEndpoint,
+			prospectsolicitorEndpoint,
+		),
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		return 0, err
+	}
+
+	return executeRequestAndGetStatusCode(ps.s, req)
 }
 
-//DeleteSolicitor DELETEs a solicitor from a prospect
-func DeleteSolicitor() {
+// //Delete DELETEs a solicitor from a prospect EOI RELATED
+// func (ps *ProspectSolicitor) Delete() (int, error) {
+// 	req, err := http.NewRequest(
+// 		"DELETE",
+// 		fmt.Sprintf(
+// 			"%v/%v",
+// 			ps.s.Auth.PortalEndpoint,
+// 			prospectsolicitorEndpoint,
+// 		),
+// 		bytes.NewReader(body),
+// 	)
+// 	if err != nil {
+// 		return 0, err
+// 	}
 
-}
+// 	return executeRequestAndGetStatusCode(ps.s, req)
+// }
