@@ -122,9 +122,25 @@ func checkOffer() {
 	println(updatedOffer)
 }
 
-// func checkProspects(){
-// 	prospect := portal.Prospect{
-// 	}
+func checkProspects() {
+	prospect := portal.Prospect{}
 
-// 	prospect.
-// }
+	agent := &portal.Agent{}
+	schedule := &portal.Schedule{}
+
+	statusCode, err := prospect.UpdateAgent(agent)
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
+	statusCode, err = prospect.UpdateProspect()
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
+	statusCode, err = prospect.UpdateSchedule(schedule)
+	if err != nil {
+		println(err)
+	}
+	println(statusCode)
+}
