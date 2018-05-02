@@ -26,17 +26,16 @@ func checkAccounts() {
 	}
 	println(accDeposits)
 
-	statusCode, err := account.Update()
+	err = account.Update()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = account.Delete()
+	err = account.Delete()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
+
 }
 
 func checkCompanies() {
@@ -60,23 +59,20 @@ func checkCompanies() {
 	println(accounts)
 	println(contacts)
 
-	statusCode, err := company.AddUsers(agents)
+	err = company.AddUsers(agents)
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = company.Delete()
+	err = company.Delete()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = company.Update()
+	err = company.Update()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 }
 
 func checkContacts() {
@@ -97,18 +93,15 @@ func checkEvents() {
 		Terminals: 8,
 	}
 
-	statusCode, err := event.Update()
+	err := event.Update()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = event.Delete()
+	err = event.Delete()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
-
 }
 
 //Listing is missing a lot of functionality
@@ -125,11 +118,10 @@ func checkListings() {
 		println(err)
 	}
 
-	statusCode, err := listing.Delete()
+	err = listing.Delete()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
 }
 
@@ -165,21 +157,18 @@ func checkProspects() {
 	agent := &portal.Agent{}
 	schedule := &portal.Schedule{}
 
-	statusCode, err := prospect.UpdateAgent(agent)
+	err := prospect.UpdateAgent(agent)
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = prospect.Update()
+	err = prospect.Update()
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 
-	statusCode, err = prospect.UpdateSchedule(schedule)
+	err = prospect.UpdateSchedule(schedule)
 	if err != nil {
 		println(err)
 	}
-	println(statusCode)
 }
