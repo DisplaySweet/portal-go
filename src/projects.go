@@ -8,10 +8,17 @@ import (
 
 const projectEndpont = "projects"
 
+//TODO: Not all modelled fields have yet been included
 // Project holds information about a project
 type Project struct {
-	ID   string `json:"ID"`
-	Name string `json:"Name"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	CompanyID string `json:"companyid"`
+	Company   Company
+	Active    bool `json:"active"`
+	Listings  []Listing
+	Events    []Event
+	Offers    []Offer
 }
 
 // GetProjectByName returns a project queried by name

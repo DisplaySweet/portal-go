@@ -11,33 +11,33 @@ const prospectEndpoint = "prospects"
 
 //Prospect holds the data for a prospect
 type Prospect struct {
-	ID          string
-	BuyerCode   string
-	OwnerID     string
+	ID string `json:"id"`
+	//BuyerCode   string ``
+	OwnerID     string `json:"ownerid"`
 	Owner       Company
-	CompanyID   string
+	CompanyID   string `json:"companyid"`
 	Company     Company
-	ProjectID   string
+	ProjectID   string `json:"projectid"`
 	Project     Project
-	AgentID     string
+	AgentID     string `json:"agentid"`
 	Agent       Agent
-	SolicitorID string
+	SolicitorID string `json:"solicitorid"`
 	Solicitor   ProspectSolicitor
-	DateCreated string
+	DateCreated string `json:"DateCreated"`
 	Buyers      []ProspectBuyer
-	EventID     string
-	SeatCount   int
+	EventID     string `json:"eventid"`
+	SeatCount   int    `json:"seatcount"`
 	// ScheduleID   string
 	// Schedule     Schedule
-	WasScheduled bool
-	HasPaid      bool
-	HasArrived   string
-	ArrivalSent  bool
-	ArrivalTime  string
-	Offers       []Offer
-	Attachments  []ProspectAttachment
-	Deposits     []Deposit
-	s            *Session
+	WasScheduled bool `json:"wasscheduled"`
+	HasPaid      bool `json:"haspaid"`
+	//HasArrived   string `json:"hasarrived"`
+	//ArrivalSent bool
+	//ArrivalTime string
+	Offers      []Offer
+	Attachments []ProspectAttachment
+	Deposits    []Deposit
+	s           *Session
 }
 
 func execRequestReturnAllEventProspects(s *Session, req *http.Request) ([]*Prospect, error) {

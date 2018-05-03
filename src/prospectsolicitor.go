@@ -15,16 +15,16 @@ const prospectsolicitorEndpoint = "eoi/prospectsolicitors"
 ///////
 
 type ProspectSolicitor struct {
-	ID          string
-	Phone       string
-	Mobile      string
-	Email       string
-	CompanyName string
-	FullName    string
-	AddressID   string
+	ID          string `json:"id"`
+	Phone       string `json:"phone"`
+	Mobile      string `json:"mobile"`
+	Email       string `json:"email"`
+	CompanyName string `json:"company_name"`
+	FullName    string `json:"full_name"`
+	AddressID   string `json:"addressid"`
 	Address     Address
-	CompanyID   string
-	ProjectID   string
+	CompanyID   string `json:"companyid"`
+	ProjectID   string `json:"projectid"`
 	s           *Session
 }
 
