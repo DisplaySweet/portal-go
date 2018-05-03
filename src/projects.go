@@ -10,8 +10,8 @@ const projectEndpont = "projects"
 
 // Project holds information about a project
 type Project struct {
-	ID   string
-	Name string
+	ID   string `json:"ID"`
+	Name string `json:"Name"`
 }
 
 // GetProjectByName returns a project queried by name
