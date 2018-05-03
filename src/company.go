@@ -34,7 +34,7 @@ type accountsContactsResponse struct {
 func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
-		err = fmt.Errorf(fmt.Sprintf("All Companies: failed to retrieve []bytes: ERR: %v", err))
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -44,7 +44,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
-		err = fmt.Errorf(fmt.Sprintf("All Companies: failed to unmarshal []bytes: ERR: %v", err))
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -60,6 +60,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -73,6 +74,7 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Account, []*Contact, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, nil, err
 	}
 
@@ -80,6 +82,7 @@ func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Acc
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, nil, err
 	}
 
@@ -98,6 +101,7 @@ func (s *Session) GetAllCompanies() ([]*Company, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -117,6 +121,7 @@ func (c *Company) GetByID() (*Company, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -128,6 +133,7 @@ func (s *Session) CreateCompany(company *Company) (*Company, error) {
 	company.ID = ""
 	body, err := json.Marshal(*company)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -147,6 +153,7 @@ func (s *Session) CreateCompany(company *Company) (*Company, error) {
 func (c *Company) Update() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -161,6 +168,7 @@ func (c *Company) Update() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -181,6 +189,7 @@ func (c *Company) Delete() error {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -201,6 +210,7 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, nil, err
 	}
 
@@ -211,6 +221,7 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 func (c *Company) AddUsers(a []*Agent) error {
 	body, err := json.Marshal(a)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -225,6 +236,7 @@ func (c *Company) AddUsers(a []*Agent) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 

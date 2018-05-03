@@ -43,6 +43,7 @@ type Prospect struct {
 func execRequestReturnAllEventProspects(s *Session, req *http.Request) ([]*Prospect, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -52,6 +53,7 @@ func execRequestReturnAllEventProspects(s *Session, req *http.Request) ([]*Prosp
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -76,6 +78,7 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -90,6 +93,7 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 func (p *Prospect) Update() error {
 	body, err := json.Marshal(*p)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -103,6 +107,7 @@ func (p *Prospect) Update() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -113,6 +118,7 @@ func (p *Prospect) Update() error {
 func (p *Prospect) UpdateAgent(a *Agent) error {
 	body, err := json.Marshal(*a)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -127,6 +133,7 @@ func (p *Prospect) UpdateAgent(a *Agent) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -137,6 +144,7 @@ func (p *Prospect) UpdateAgent(a *Agent) error {
 func (p *Prospect) UpdateSchedule(s *Schedule) error {
 	body, err := json.Marshal(*s)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -151,6 +159,7 @@ func (p *Prospect) UpdateSchedule(s *Schedule) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 

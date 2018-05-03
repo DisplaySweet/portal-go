@@ -33,6 +33,7 @@ type Offer struct {
 func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -42,6 +43,7 @@ func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error)
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -56,6 +58,7 @@ func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error)
 func execRequestReturnSingleOffer(s *Session, req *http.Request) (*Offer, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -78,6 +81,7 @@ func (s *Session) GetAllOffers() ([]*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -96,6 +100,7 @@ func (s *Session) GetPendingOffers() ([]*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -114,6 +119,7 @@ func (s *Session) GetCompletedOffers() ([]*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -133,6 +139,7 @@ func (s *Session) GetOfferByID(id string) (*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -144,6 +151,7 @@ func (s *Session) CreateOffer(o *Offer) (*Offer, error) {
 	o.ID = ""
 	body, err := json.Marshal(*o)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -158,6 +166,7 @@ func (s *Session) CreateOffer(o *Offer) (*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -168,6 +177,7 @@ func (s *Session) CreateOffer(o *Offer) (*Offer, error) {
 func (o *Offer) Update() (*Offer, error) {
 	body, err := json.Marshal(*o)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -182,6 +192,7 @@ func (o *Offer) Update() (*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -201,6 +212,7 @@ func (o *Offer) Complete() (*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -245,6 +257,7 @@ func (o *Offer) Cancel() (*Offer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 

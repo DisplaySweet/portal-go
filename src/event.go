@@ -28,6 +28,7 @@ type Event struct {
 func execRequestReturnAllEvents(s *Session, req *http.Request) ([]*Event, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -37,6 +38,7 @@ func execRequestReturnAllEvents(s *Session, req *http.Request) ([]*Event, error)
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -51,6 +53,7 @@ func execRequestReturnAllEvents(s *Session, req *http.Request) ([]*Event, error)
 func execRequestReturnSingleEvent(s *Session, req *http.Request) (*Event, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -73,6 +76,7 @@ func (s *Session) GetEvents() ([]*Event, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -90,6 +94,7 @@ func (s *Session) GetEventByID(id string) (*Event, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -101,6 +106,7 @@ func (s *Session) CreateEvent(e *Event) error {
 	e.ID = ""
 	body, err := json.Marshal(*e)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -114,6 +120,7 @@ func (s *Session) CreateEvent(e *Event) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -125,6 +132,7 @@ func (s *Session) CreateEvent(e *Event) error {
 func (e *Event) Update() error {
 	body, err := json.Marshal(*e)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -139,6 +147,7 @@ func (e *Event) Update() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -159,6 +168,7 @@ func (e *Event) Delete() error {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 

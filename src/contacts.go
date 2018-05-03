@@ -31,6 +31,7 @@ type Contact struct {
 func execRequestReturnSingleContact(s *Session, req *http.Request) (*Contact, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -54,6 +55,7 @@ func (s *Session) GetContactByID(id string) (*Contact, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -75,6 +77,7 @@ func (s *Session) GetContactByName(firstname string, lastname string) (*Contact,
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -94,11 +97,13 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -115,6 +120,7 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 func (c *Contact) SendUpdate() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -130,11 +136,13 @@ func (c *Contact) SendUpdate() error {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
 	err = executeRequestAndParseStatusCode(c.s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 	return nil
@@ -146,6 +154,7 @@ func (s *Session) CreateContact(c *Contact) error {
 	c.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*c)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -160,11 +169,13 @@ func (s *Session) CreateContact(c *Contact) error {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
 	err = executeRequestAndParseStatusCode(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 	return nil

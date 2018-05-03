@@ -34,6 +34,7 @@ type ProspectBuyer struct {
 func execRequestReturnAllProspectsBuyers(s *Session, req *http.Request) ([]*ProspectBuyer, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -43,6 +44,7 @@ func execRequestReturnAllProspectsBuyers(s *Session, req *http.Request) ([]*Pros
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -65,6 +67,7 @@ func (s *Session) GetProspectBuyers() ([]*ProspectBuyer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -83,6 +86,7 @@ func (s *Session) GetAvailableProspectBuyers() ([]*ProspectBuyer, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 

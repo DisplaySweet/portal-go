@@ -35,6 +35,7 @@ type Listing struct {
 func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -42,6 +43,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -58,6 +60,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -65,6 +68,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -82,6 +86,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 func execRequestReturnActivity(s *Session, req *http.Request) (*ListingActivity, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -89,6 +94,7 @@ func execRequestReturnActivity(s *Session, req *http.Request) (*ListingActivity,
 
 	err = json.Unmarshal(responseBytes, activity)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -98,6 +104,7 @@ func execRequestReturnActivity(s *Session, req *http.Request) (*ListingActivity,
 func execRequestReturnAllActivity(s *Session, req *http.Request) ([]*ListingActivity, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -105,6 +112,7 @@ func execRequestReturnAllActivity(s *Session, req *http.Request) ([]*ListingActi
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -120,6 +128,7 @@ func execRequestReturnAllActivity(s *Session, req *http.Request) ([]*ListingActi
 func execRequestReturnAllStatusActivity(s *Session, req *http.Request) ([]*ListingStatusActivity, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -127,6 +136,7 @@ func execRequestReturnAllStatusActivity(s *Session, req *http.Request) ([]*Listi
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -151,6 +161,7 @@ func (s *Session) GetListings() ([]*Listing, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -170,6 +181,7 @@ func (s *Session) GetActivityByID(l *Listing) (*ListingActivity, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -188,6 +200,7 @@ func (s *Session) GetAllActivity() ([]*ListingActivity, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -206,6 +219,7 @@ func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -217,6 +231,7 @@ func (s *Session) CreateListing(l *Listing) error {
 	l.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*l)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -230,11 +245,13 @@ func (s *Session) CreateListing(l *Listing) error {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
 	response, err := executeRequest(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -262,6 +279,7 @@ func (l *Listing) Delete() error {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -352,6 +370,7 @@ func (l *Listing) Delete() error {
 func (l *Listing) Update() error {
 	body, err := json.Marshal(*l)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -367,11 +386,13 @@ func (l *Listing) Update() error {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
 	err = executeRequestAndParseStatusCode(l.s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 	return nil

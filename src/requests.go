@@ -23,7 +23,7 @@ func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error) {
 	response, err := executeRequest(s, req)
 	if err != nil {
-		err = fmt.Errorf(fmt.Sprintf("Request Body Bytes: failed to execute http request: ERR: %v", err))
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 	defer response.Body.Close()
@@ -34,7 +34,7 @@ func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error
 func executeRequestAndParseStatusCode(s *Session, req *http.Request) error {
 	response, err := executeRequest(s, req)
 	if err != nil {
-		err = fmt.Errorf(fmt.Sprintf("Request Status Code: execute request and retrieve status code: ERR: %v", err))
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 

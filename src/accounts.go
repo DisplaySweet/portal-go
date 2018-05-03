@@ -179,6 +179,7 @@ func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -190,6 +191,7 @@ func (s *Session) CreateAccount(account *Account) error {
 	account.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*account)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -203,6 +205,7 @@ func (s *Session) CreateAccount(account *Account) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -213,6 +216,7 @@ func (s *Session) CreateAccount(account *Account) error {
 func (a *Account) Update() error {
 	body, err := json.Marshal(*a)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -227,6 +231,7 @@ func (a *Account) Update() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -238,6 +243,7 @@ func (a *Account) Update() error {
 func (a *Account) Delete() error {
 	body, err := json.Marshal(*a)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -252,6 +258,7 @@ func (a *Account) Delete() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -263,6 +270,7 @@ func (a *Account) Delete() error {
 func (s *Session) Delete(list []*Account) error {
 	body, err := json.Marshal(list)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -276,6 +284,7 @@ func (s *Session) Delete(list []*Account) error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 

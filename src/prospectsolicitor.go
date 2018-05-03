@@ -31,11 +31,16 @@ type ProspectSolicitor struct {
 func execRequestReturnSingleProspectSolicitor(s *Session, req *http.Request) (*ProspectSolicitor, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
 	prospectSolicitor := &ProspectSolicitor{}
 	err = json.Unmarshal(responseBytes, prospectSolicitor)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
 
 	return prospectSolicitor, err
 }
@@ -52,6 +57,7 @@ func (s *Session) GetSolicitor() (*ProspectSolicitor, error) {
 		nil,
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -63,6 +69,7 @@ func (ps *ProspectSolicitor) Create() error {
 	ps.ID = ""
 	body, err := json.Marshal(*ps)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -76,6 +83,7 @@ func (ps *ProspectSolicitor) Create() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -86,6 +94,7 @@ func (ps *ProspectSolicitor) Create() error {
 func (ps *ProspectSolicitor) Update() error {
 	body, err := json.Marshal(*ps)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
@@ -99,6 +108,7 @@ func (ps *ProspectSolicitor) Update() error {
 		bytes.NewReader(body),
 	)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
 	}
 
