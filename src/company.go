@@ -34,6 +34,7 @@ type accountsContactsResponse struct {
 func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf(fmt.Sprintf("All Companies: failed to retrieve []bytes: ERR: %v", err))
 		return nil, err
 	}
 
@@ -43,6 +44,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf(fmt.Sprintf("All Companies: failed to unmarshal []bytes: ERR: %v", err))
 		return nil, err
 	}
 
