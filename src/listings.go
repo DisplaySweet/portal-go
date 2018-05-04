@@ -259,7 +259,7 @@ func (s *Session) CreateListing(l *Listing) error {
 	case 204:
 		break
 	default:
-		return fmt.Errorf("Did not get a success code from the portal  %v", response.StatusCode)
+		return fmt.Errorf("Error in file: %v line %v. Original ERR: Did not get a success code from the portal: %v", ErrorFile(), ErrorLine(), response.StatusCode)
 	}
 
 	return nil
