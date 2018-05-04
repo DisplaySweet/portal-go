@@ -110,14 +110,14 @@ func (s *Session) GetAllCompanies() ([]*Company, error) {
 }
 
 //GetCompanyByID creates the appropriate get request and calls the service function to execute and handle the request
-func (c *Company) GetByID() (*Company, error) {
+func (s *Session) GetCompany(id string) (*Company, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			c.S.Auth.PortalEndpoint,
+			s.Auth.PortalEndpoint,
 			companyEndpoint,
-			c.ID),
+			id),
 		nil,
 	)
 
@@ -126,7 +126,7 @@ func (c *Company) GetByID() (*Company, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleCompany(c.S, req)
+	return execRequestReturnSingleCompany(s, req)
 }
 
 //CreateCompany POSTs a new company to the portal
