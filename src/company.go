@@ -11,18 +11,19 @@ const companyEndpoint = "companies"
 
 //Company holds information about companies
 type Company struct {
-	ID                      string `json:"id"`
-	Name                    string `json:"name"`
-	Active                  bool   `json:"active"`
-	StripeAccountID         string `json:"stripeaccountid"`
-	CreatedByID             string `json:"createdbyid"`
-	CreatedDate             string `json:"createddate"`
-	CreatedBy               Agent
-	Projects                []Project
-	UserCompanies           []UserCompany
-	Events                  []Event
-	AllocationGroupAgencies []AllocationGroupAgency
-	s                       *Session
+	ID              string        `json:"id"`
+	Name            string        `json:"name"`
+	Active          bool          `json:"active"`
+	StripeAccountID string        `json:"stripeaccountid"`
+	CreatedByID     string        `json:"createdbyid"`
+	CreatedDate     string        `json:"createddate"`
+	CreatedBy       Agent         `json:"createdby"`
+	Projects        []Project     `json:"projects"`
+	UserCompanies   []UserCompany `json:"usercompanies"`
+	Events          []Event       `json:"events"`
+	S               *Session      `json:"-"`
+	//AllocationGroupAgencies []AllocationGroupAgency `json`
+
 }
 
 type accountsContactsResponse struct {
@@ -38,7 +39,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 		return nil, err
 	}
 
-	var temp map[string]*Company
+	var temp []*Company
 
 	list := make([]*Company, 0, 0)
 
@@ -49,7 +50,7 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 	}
 
 	for _, company := range temp {
-		company.s = s
+		company.S = s
 		list = append(list, company)
 	}
 
@@ -66,7 +67,7 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 
 	company := &Company{}
 	err = json.Unmarshal(responseBytes, company)
-	company.s = s
+	company.S = s
 
 	return company, err
 }
@@ -114,7 +115,7 @@ func (c *Company) GetByID() (*Company, error) {
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			c.s.Auth.PortalEndpoint,
+			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID),
 		nil,
@@ -125,7 +126,7 @@ func (c *Company) GetByID() (*Company, error) {
 		return nil, err
 	}
 
-	return execRequestReturnSingleCompany(c.s, req)
+	return execRequestReturnSingleCompany(c.S, req)
 }
 
 //CreateCompany POSTs a new company to the portal
@@ -161,7 +162,7 @@ func (c *Company) Update() error {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			c.s.Auth.PortalEndpoint,
+			c.S.Auth.PortalEndpoint,
 			accountEndpoint,
 			c.ID,
 		),
@@ -172,7 +173,7 @@ func (c *Company) Update() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.S, req)
 
 }
 
@@ -182,7 +183,7 @@ func (c *Company) Delete() error {
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			c.s.Auth.PortalEndpoint,
+			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -193,7 +194,7 @@ func (c *Company) Delete() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.S, req)
 
 }
 
@@ -203,7 +204,7 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/accountscontacts",
-			c.s.Auth.PortalEndpoint,
+			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -214,7 +215,7 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 		return nil, nil, err
 	}
 
-	return execRequestReturnAllAccountsContacts(c.s, req)
+	return execRequestReturnAllAccountsContacts(c.S, req)
 }
 
 //AddCompanyUser adds an Agent 'user' to the company
@@ -229,7 +230,7 @@ func (c *Company) AddUsers(a []*Agent) error {
 		"POST",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			c.s.Auth.PortalEndpoint,
+			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
 		),
@@ -240,6 +241,6 @@ func (c *Company) AddUsers(a []*Agent) error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(c.s, req)
+	return executeRequestAndParseStatusCode(c.S, req)
 
 }
