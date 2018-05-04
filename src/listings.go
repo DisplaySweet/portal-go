@@ -3,7 +3,6 @@ package portal
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 )
@@ -12,23 +11,23 @@ const listingEndpoint = "listings"
 
 //Listing holds information of a listing
 type Listing struct {
-	ID            string  `json:"id"`
-	Name          string  `json:"listing_name"`
-	Availability  string  `json:"availability"`
-	Floor         string  `json:"floor"`
-	Building      string  `json:"building"`
-	Price         float32 `json:"live_price"`
-	OriginalPrice float32 `json:"price"`
-	Bedrooms      string  `json:"bedrooms"`
-	Bathrooms     string  `json:"bathrooms"`
-	Study         string  `json:"study"`
-	Carspaces     string  `json:"carspaces"`
-	Aspect        string  `json:"aspect_orientation"`
-	MarketingPlan string  `json:"marketing_plan"`
-	InternalArea  float32 `json:"internal_area"`
-	ExternalArea  float32 `json:"external_area"`
-	TotalArea     float32 `json:"total_area"`
-	s             *Session
+	ID            string   `json:"id"`
+	Name          string   `json:"listing_name"`
+	Availability  string   `json:"availability"`
+	Floor         string   `json:"floor"`
+	Building      string   `json:"building"`
+	Price         float32  `json:"live_price"`
+	OriginalPrice float32  `json:"price"`
+	Bedrooms      string   `json:"bedrooms"`
+	Bathrooms     string   `json:"bathrooms"`
+	Study         string   `json:"study"`
+	Carspaces     string   `json:"carspaces"`
+	Aspect        string   `json:"aspect_orientation"`
+	MarketingPlan string   `json:"marketing_plan"`
+	InternalArea  float32  `json:"internal_area"`
+	ExternalArea  float32  `json:"external_area"`
+	TotalArea     float32  `json:"total_area"`
+	s             *Session `json:"-`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
@@ -260,7 +259,7 @@ func (s *Session) CreateListing(l *Listing) error {
 	case 204:
 		break
 	default:
-		return errors.New("Did not get a success code from the portal")
+		return fmt.Errorf("Did not get a success code from the portal  %v", response.StatusCode)
 	}
 
 	return nil
