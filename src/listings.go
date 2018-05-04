@@ -12,7 +12,7 @@ const listingEndpoint = "listings"
 
 //Listing holds information of a listing
 type Listing struct {
-	ID            string
+	ID            string  `json:"id"`
 	Name          string  `json:"listing_name"`
 	Availability  string  `json:"availability"`
 	Floor         string  `json:"floor"`
