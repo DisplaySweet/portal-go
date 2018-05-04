@@ -43,7 +43,7 @@ func executeRequestAndParseStatusCode(s *Session, req *http.Request) error {
 	case 204:
 		break
 	default:
-		return errors.New("Not implemented")
+		return errors.New("ERR: Request returned bad status code")
 	}
 
 	return nil
