@@ -27,7 +27,7 @@ type Account struct {
 	Agent           Agent            `json:"agent"`
 	Notes           string           `json:"notes"`
 	AccountContacts []AccountContact `json:"accountcontacts"`
-	s               *Session
+	s               *Session         `json:""-"`
 }
 
 func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, error) {
