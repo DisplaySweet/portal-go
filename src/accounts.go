@@ -10,23 +10,23 @@ import (
 const accountEndpoint = "accounts"
 
 type Account struct {
-	ID              string `json:""`
-	Phone           string `json:""`
-	Mobile          string `json:""`
-	Email           string `json:""`
-	AccountName     string `json:""`
-	AccountType     string `json:""`
-	Industry        string `json:""`
-	Website         string `json:""`
-	AddressID       string `json:""`
-	Address         Address
-	ReferralCode    string `json:""`
-	OwnerID         string `json:""`
-	Owner           Company
-	AgentID         string `json:""`
-	Agent           Agent
-	Notes           string `json:""`
-	AccountContacts []AccountContact
+	ID              string           `json:"id"`
+	Phone           string           `json:"phone"`
+	Mobile          string           `json:"mobile"`
+	Email           string           `json:"email"`
+	Name            string           `json:"accountname"`
+	Type            string           `json:"accounttype"`
+	Industry        string           `json:"industry"`
+	Website         string           `json:"website"`
+	AddressID       string           `json:"addressid"`
+	Address         Address          `json:"address"`
+	ReferralCode    string           `json:"referralcode"`
+	OwnerID         string           `json:"ownerid"`
+	Owner           Company          `json:"owner"`
+	AgentID         string           `json:"agentid"`
+	Agent           Agent            `json:"agent"`
+	Notes           string           `json:"notes"`
+	AccountContacts []AccountContact `json:"accountcontacts"`
 	s               *Session
 }
 
