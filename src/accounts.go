@@ -27,7 +27,7 @@ type Account struct {
 	Agent           Agent            `json:"agent"`
 	Notes           string           `json:"notes"`
 	AccountContacts []AccountContact `json:"accountcontacts"`
-	s               *Session         `json:""-"`
+	s               *Session         `json:"s"`
 }
 
 func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, error) {
@@ -147,7 +147,7 @@ func (s *Session) GetAccount(id string) (*Account, error) {
 	return execRequestReturnSingleAccount(s, req)
 }
 
-//GetAccountContacts GETs a list of AccountContacts that belong to the Account, using their ID
+//GetOwnedContacts GETs a list of AccountContacts that belong to the Account, using their ID
 func (a *Account) GetOwnedContacts() ([]*AccountContact, error) {
 	req, err := http.NewRequest(
 		"GET",

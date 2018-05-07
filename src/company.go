@@ -21,7 +21,7 @@ type Company struct {
 	Projects        []Project     `json:"projects"`
 	UserCompanies   []UserCompany `json:"usercompanies"`
 	Events          []Event       `json:"events"`
-	S               *Session      `json:"-"`
+	S               *Session      `json:"S"`
 	//AllocationGroupAgencies []AllocationGroupAgency `json`
 
 }
