@@ -23,7 +23,10 @@ type Company struct {
 	Events          []Event       `json:"events"`
 	S               Session       `json:"S"`
 	//AllocationGroupAgencies []AllocationGroupAgency `json`
+}
 
+type UserAdd struct {
+	Level string `json:"Level"`
 }
 
 type accountsContactsResponse struct {
@@ -224,8 +227,8 @@ func (c *Company) GetAccountsContacts() ([]*Account, []*Contact, error) {
 }
 
 //AddCompanyUser adds an Agent 'user' to the company
-func (c *Company) AddUsers(a []*Agent) error {
-	body, err := json.Marshal(a)
+func (c *Company) AddUsers(u []*UserAdd) error {
+	body, err := json.Marshal(u)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
