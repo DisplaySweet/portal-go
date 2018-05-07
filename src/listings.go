@@ -13,7 +13,7 @@ const listingEndpoint = "listings"
 type Listing struct {
 	ID     string        `json:"id"`
 	Fields ListingFields `json:"Fields"`
-	S      Session       `json:"s`
+	S      Session       `json:"S`
 }
 
 type ListingFields struct {
