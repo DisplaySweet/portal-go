@@ -11,7 +11,12 @@ const listingEndpoint = "listings"
 
 //Listing holds information of a listing
 type Listing struct {
-	ID            string  `json:"id"`
+	ID     string        `json:"id"`
+	Fields ListingFields `json:"Fields"`
+	S      Session       `json:"s`
+}
+
+type ListingFields struct {
 	Name          string  `json:"listing_name"`
 	Availability  string  `json:"availability"`
 	Floor         string  `json:"floor"`
@@ -27,7 +32,6 @@ type Listing struct {
 	InternalArea  float32 `json:"internal_area"`
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
-	S             Session `json:"s`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
@@ -38,7 +42,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 		return nil, err
 	}
 
-	var temp map[string]*Listing
+	var temp []*Listing
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
@@ -47,8 +51,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 	}
 
 	var v *Listing
-	for k, v := range temp {
-		v.ID = k
+	for _, v := range temp {
 		v.S = *s
 	}
 
@@ -63,7 +66,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 		return nil, err
 	}
 
-	var temp map[string]*Listing
+	var temp []*Listing
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
@@ -73,8 +76,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 
 	list := make([]*Listing, 0, 0)
 
-	for id, listing := range temp {
-		listing.ID = id
+	for _, listing := range temp {
 		listing.S = *s
 		list = append(list, listing)
 	}
