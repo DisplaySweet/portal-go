@@ -13,8 +13,8 @@ func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 	req.Header["X-DS-AUTH-APITOKEN"] = []string{s.Auth.APIKey}
 	//req.Header["X-DS-AUTH-COMPANY"] = []string{s.Auth.Company}
 	req.Header["X-DS-DATA-APITOKEN"] = []string{s.Auth.APIKey}
-	req.Header["X-DS-DATA-COMPANY"] = []string{s.Company.ID}
-	req.Header["X-DS-DATA-PROJECT"] = []string{s.Project.ID}
+	req.Header["X-DS-DATA-COMPANY"] = []string{s.Company}
+	req.Header["X-DS-DATA-PROJECT"] = []string{s.Project}
 
 	return http.DefaultClient.Do(req)
 }
