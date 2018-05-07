@@ -27,26 +27,28 @@ type Account struct {
 	Agent           Agent            `json:"agent"`
 	Notes           string           `json:"notes"`
 	AccountContacts []AccountContact `json:"accountcontacts"`
-	s               *Session         `json:"s"`
+	S               Session          `json:"S"`
 }
 
 func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
-	var temp map[string]*Account
+	var temp []*Account
 
 	list := make([]*Account, 0, 0)
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
 	for _, account := range temp {
-		account.s = s
+		account.S = *s
 		list = append(list, account)
 	}
 
@@ -56,12 +58,17 @@ func execRequestReturnAllAccounts(s *Session, req *http.Request) ([]*Account, er
 func execRequestReturnSingleAccount(s *Session, req *http.Request) (*Account, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
 	account := &Account{}
 	err = json.Unmarshal(responseBytes, account)
-	account.s = s
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+	account.S = *s
 
 	return account, err
 }
@@ -69,6 +76,7 @@ func execRequestReturnSingleAccount(s *Session, req *http.Request) (*Account, er
 func execRequestReturnAllAccountContacts(s *Session, req *http.Request) ([]*AccountContact, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -78,6 +86,7 @@ func execRequestReturnAllAccountContacts(s *Session, req *http.Request) ([]*Acco
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -91,6 +100,7 @@ func execRequestReturnAllAccountContacts(s *Session, req *http.Request) ([]*Acco
 func execRequestReturnAllAccountDeposits(s *Session, req *http.Request) ([]*Deposit, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -100,6 +110,7 @@ func execRequestReturnAllAccountDeposits(s *Session, req *http.Request) ([]*Depo
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -122,6 +133,7 @@ func (s *Session) GetAllAccounts() ([]*Account, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -141,6 +153,7 @@ func (s *Session) GetAccount(id string) (*Account, error) {
 	)
 
 	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
@@ -153,26 +166,7 @@ func (a *Account) GetOwnedContacts() ([]*AccountContact, error) {
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/contacts",
-			a.s.Auth.PortalEndpoint,
-			accountEndpoint,
-			a.ID),
-		nil,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return execRequestReturnAllAccountContacts(a.s, req)
-}
-
-//GetAccountDeposits GETs a list of all DepositResponses belonging to the Account, using their ID
-func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
-	req, err := http.NewRequest(
-		"GET",
-		fmt.Sprintf(
-			"%v/%v/%v/deposits",
-			a.s.Auth.PortalEndpoint,
+			a.S.Auth.PortalEndpoint,
 			accountEndpoint,
 			a.ID),
 		nil,
@@ -183,7 +177,27 @@ func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
 		return nil, err
 	}
 
-	return execRequestReturnAllAccountDeposits(a.s, req)
+	return execRequestReturnAllAccountContacts(&a.S, req)
+}
+
+//GetAccountDeposits GETs a list of all DepositResponses belonging to the Account, using their ID
+func (a *Account) GetOwnedDeposits() ([]*Deposit, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v/deposits",
+			a.S.Auth.PortalEndpoint,
+			accountEndpoint,
+			a.ID),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnAllAccountDeposits(&a.S, req)
 }
 
 //CreateAccount POSTs a new Account to the portal
@@ -224,7 +238,7 @@ func (a *Account) Update() error {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			a.s.Auth.PortalEndpoint,
+			a.S.Auth.PortalEndpoint,
 			accountEndpoint,
 			a.ID,
 		),
@@ -235,7 +249,7 @@ func (a *Account) Update() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(a.s, req)
+	return executeRequestAndParseStatusCode(&a.S, req)
 
 }
 
@@ -251,7 +265,7 @@ func (a *Account) Delete() error {
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			a.s.Auth.PortalEndpoint,
+			a.S.Auth.PortalEndpoint,
 			accountEndpoint,
 			a.ID,
 		),
@@ -262,7 +276,7 @@ func (a *Account) Delete() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(a.s, req)
+	return executeRequestAndParseStatusCode(&a.S, req)
 
 }
 
