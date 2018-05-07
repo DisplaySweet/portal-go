@@ -66,7 +66,12 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 	}
 
 	company := &Company{}
+
 	err = json.Unmarshal(responseBytes, company)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
 	company.S = *s
 
 	return company, err
