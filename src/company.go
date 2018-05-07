@@ -163,7 +163,7 @@ func (c *Company) Update() error {
 		fmt.Sprintf(
 			"%v/%v/%v",
 			c.S.Auth.PortalEndpoint,
-			accountEndpoint,
+			companyEndpoint,
 			c.ID,
 		),
 		bytes.NewReader(body),
