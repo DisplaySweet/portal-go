@@ -2,7 +2,7 @@ package portal
 
 // Session holds information about the current session
 type Session struct {
-	Auth    Auth
-	Project string
-	Company string
+	Auth      Auth
+	ProjectID string
+	CompanyID string
 }
