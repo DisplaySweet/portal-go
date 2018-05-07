@@ -234,7 +234,7 @@ func (c *Company) AddUsers(a []*Agent) error {
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"%v/%v/%v",
+			"%v/%v/%v/addusers",
 			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
