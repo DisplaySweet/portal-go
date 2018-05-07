@@ -11,23 +11,23 @@ const listingEndpoint = "listings"
 
 //Listing holds information of a listing
 type Listing struct {
-	ID            string   `json:"id"`
-	Name          string   `json:"listing_name"`
-	Availability  string   `json:"availability"`
-	Floor         string   `json:"floor"`
-	Building      string   `json:"building"`
-	Price         float32  `json:"live_price"`
-	OriginalPrice float32  `json:"price"`
-	Bedrooms      string   `json:"bedrooms"`
-	Bathrooms     string   `json:"bathrooms"`
-	Study         string   `json:"study"`
-	Carspaces     string   `json:"carspaces"`
-	Aspect        string   `json:"aspect_orientation"`
-	MarketingPlan string   `json:"marketing_plan"`
-	InternalArea  float32  `json:"internal_area"`
-	ExternalArea  float32  `json:"external_area"`
-	TotalArea     float32  `json:"total_area"`
-	s             *Session `json:"-`
+	ID            string  `json:"id"`
+	Name          string  `json:"listing_name"`
+	Availability  string  `json:"availability"`
+	Floor         string  `json:"floor"`
+	Building      string  `json:"building"`
+	Price         float32 `json:"live_price"`
+	OriginalPrice float32 `json:"price"`
+	Bedrooms      string  `json:"bedrooms"`
+	Bathrooms     string  `json:"bathrooms"`
+	Study         string  `json:"study"`
+	Carspaces     string  `json:"carspaces"`
+	Aspect        string  `json:"aspect_orientation"`
+	MarketingPlan string  `json:"marketing_plan"`
+	InternalArea  float32 `json:"internal_area"`
+	ExternalArea  float32 `json:"external_area"`
+	TotalArea     float32 `json:"total_area"`
+	S             Session `json:"s`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
@@ -49,7 +49,7 @@ func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, er
 	var v *Listing
 	for k, v := range temp {
 		v.ID = k
-		v.s = s
+		v.S = *s
 	}
 
 	return v, nil
@@ -75,7 +75,7 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 
 	for id, listing := range temp {
 		listing.ID = id
-		listing.s = s
+		listing.S = *s
 		list = append(list, listing)
 	}
 
@@ -271,7 +271,7 @@ func (l *Listing) Delete() error {
 		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
-			l.s.Auth.PortalEndpoint,
+			l.S.Auth.PortalEndpoint,
 			listingEndpoint,
 			l.ID,
 		),
@@ -282,7 +282,7 @@ func (l *Listing) Delete() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(l.s, req)
+	return executeRequestAndParseStatusCode(&l.S, req)
 }
 
 //I guess because []*Listing isnt a defined struct itself, we cant do this?
@@ -377,7 +377,7 @@ func (l *Listing) Update() error {
 		"PUT",
 		fmt.Sprintf(
 			"%v/%v/%v/byrole",
-			l.s.Auth.PortalEndpoint,
+			l.S.Auth.PortalEndpoint,
 			listingEndpoint,
 			l.ID,
 		),
@@ -389,7 +389,7 @@ func (l *Listing) Update() error {
 		return err
 	}
 
-	err = executeRequestAndParseStatusCode(l.s, req)
+	err = executeRequestAndParseStatusCode(&l.S, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
