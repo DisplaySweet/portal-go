@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -37,12 +38,13 @@ func execRequestReturnAllOffers(s *Session, req *http.Request) ([]*Offer, error)
 		return nil, err
 	}
 
-	var temp map[string]*Offer
+	var temp []*Offer
 
 	list := make([]*Offer, 0, 0)
 
 	err = json.Unmarshal(responseBytes, &temp)
 	if err != nil {
+		log.Println(string(responseBytes))
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
