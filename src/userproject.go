@@ -10,23 +10,23 @@ import (
 const userprojectEndpoint = "userprojects"
 
 type UserProject struct {
-	ID                string
-	User              User
-	UserID            string
-	CompanyID         string
-	Project           Project
-	ProjectID         string
-	AddedBy           User
-	AddedByID         string
-	ManagedBy         User
-	ManagedByID       string
-	PermissionGroup   PermissionGroup
+	ID          string
+	User        User
+	UserID      string
+	CompanyID   string
+	Project     Project
+	ProjectID   string
+	AddedBy     User
+	AddedByID   string
+	ManagedBy   User
+	ManagedByID string
+	//PermissionGroup   PermissionGroup
 	PermissionGroupID string
 	CreatedDate       string
 	S                 Session
 }
 
-func execRequestReturnAllUserProjects(s *Session, req *http.Request) []*UserProject.error {
+func execRequestReturnAllUserProjects(s *Session, req *http.Request) ([]*UserProject, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
@@ -54,11 +54,11 @@ func (s *Session) GetUserProjects() ([]*UserProject, error) {
 	)
 
 	if err != nil {
-		err.fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
 
-	return nil, execRequestReturnAllUserProjects(s, req)
+	return execRequestReturnAllUserProjects(s, req)
 }
 
 func (s *Session) CreateUserProject(up *UserProject) error {
@@ -91,13 +91,13 @@ func (s *Session) CreateUserProject(up *UserProject) error {
 	return nil
 }
 
-func (up *UserProject) Update() (*User, error){
+func (up *UserProject) Update() (*User, error) {
 	body, err := json.Marshal(*up)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
-	
+
 	req, err := http.NewRequest(
 		"PUT",
 		fmt.Sprintf(
@@ -106,14 +106,15 @@ func (up *UserProject) Update() (*User, error){
 			userprojectEndpoint,
 			up.ID,
 		),
-		bytes.NewReader(body)
+		bytes.NewReader(body),
 	)
+
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
 
-	return execRequestReturnSingleUser(s, req)
+	return execRequestReturnSingleUser(&up.S, req)
 }
 
 func (up *UserProject) DeleteUserProject() error {
@@ -132,7 +133,7 @@ func (up *UserProject) DeleteUserProject() error {
 		return err
 	}
 
-	err = executeRequestAndParseStatusCode(&u.S, req)
+	err = executeRequestAndParseStatusCode(&up.S, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
@@ -140,12 +141,12 @@ func (up *UserProject) DeleteUserProject() error {
 	return nil
 }
 
-func (up *UserProject) GetAccountsContacts() ([]*Account, []*Contact, error) { {
+func (up *UserProject) GetAccountsContacts() ([]*Account, []*Contact, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/accountscontacts",
-			c.S.Auth.PortalEndpoint,
+			up.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			up.ID,
 		),
@@ -156,5 +157,5 @@ func (up *UserProject) GetAccountsContacts() ([]*Account, []*Contact, error) { {
 		return nil, nil, err
 	}
 
-	return execRequestReturnAllAccountsContacts(&c.S, req)
+	return execRequestReturnAllAccountsContacts(&up.S, req)
 }
