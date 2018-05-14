@@ -219,23 +219,16 @@ func (u *User) SendUpdate() error {
 }
 
 func (u *User) Delete() error {
-	body, err := json.Marshal(*u)
-	if err != nil {
-		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
-	}
-
 	req, err := http.NewRequest(
-		"PUT",
+		"DELETE",
 		fmt.Sprintf(
 			"%v/%v/%v",
 			u.S.Auth.PortalEndpoint,
 			userEndpoint,
 			u.ID,
 		),
-		bytes.NewReader(body),
+		nil,
 	)
-
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err

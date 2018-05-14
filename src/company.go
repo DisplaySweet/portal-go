@@ -29,11 +29,6 @@ type UserAdd struct {
 	Level string `json:"Level"`
 }
 
-type accountsContactsResponse struct {
-	Accounts []*Account
-	Contacts []*Contact
-}
-
 // execute the HTTP requests and get the list of companies that should come out
 func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
@@ -78,24 +73,6 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 	company.S = *s
 
 	return company, err
-}
-
-func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Account, []*Contact, error) {
-	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
-	if err != nil {
-		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, nil, err
-	}
-
-	temp := &accountsContactsResponse{}
-
-	err = json.Unmarshal(responseBytes, &temp)
-	if err != nil {
-		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, nil, err
-	}
-
-	return temp.Accounts, temp.Contacts, nil
 }
 
 //GetAllCompanies creates the appropriate get request and calls the service function to execute and handle the request

@@ -1,11 +1,17 @@
 package portal
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 )
+
+type accountsContactsResponse struct {
+	Accounts []*Account
+	Contacts []*Contact
+}
 
 // Add required headers and execute the request
 func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
@@ -47,4 +53,22 @@ func executeRequestAndParseStatusCode(s *Session, req *http.Request) error {
 	}
 
 	return nil
+}
+
+func execRequestReturnAllAccountsContacts(s *Session, req *http.Request) ([]*Account, []*Contact, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, nil, err
+	}
+
+	temp := &accountsContactsResponse{}
+
+	err = json.Unmarshal(responseBytes, &temp)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, nil, err
+	}
+
+	return temp.Accounts, temp.Contacts, nil
 }
