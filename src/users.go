@@ -186,8 +186,8 @@ func (s *Session) CreateUser(u *User) (*User, error) {
 	return result, nil
 }
 
-// SendUpdate saves changes made to contact
-func (u *User) SendUpdate() error {
+//Update saves changes made to contact
+func (u *User) Update() error {
 	body, err := json.Marshal(*u)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
