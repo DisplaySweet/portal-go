@@ -113,12 +113,12 @@ func (u *User) GetCompanyUsers() ([]*User, error) {
 }
 
 //////EOIUSers
-func (u *User) GetEOIUsers() ([]*User, error) {
+func (s *Session) GetEOIUsers() ([]*User, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/eoi-user",
-			u.S.Auth.PortalEndpoint,
+			s.Auth.PortalEndpoint,
 			userEndpoint,
 		),
 		nil,
@@ -128,7 +128,7 @@ func (u *User) GetEOIUsers() ([]*User, error) {
 		return nil, err
 	}
 
-	return execRequestReturnMultipleUsers(&u.S, req)
+	return execRequestReturnMultipleUsers(s, req)
 
 }
 
@@ -155,12 +155,12 @@ func (s *Session) GetUserByID(id string) (*User, error) {
 
 // Create generates a new contact from the supplied data
 // Create should return the user that was just created.
-func (s *Session) CreateUser(u *User) error {
+func (s *Session) CreateUser(u *User) (*User, error) {
 	u.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*u)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
 
 	req, err := http.NewRequest(
@@ -175,15 +175,15 @@ func (s *Session) CreateUser(u *User) error {
 
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
 
-	err = executeRequestAndParseStatusCode(s, req)
+	result, err := execRequestReturnSingleUser(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
 // SendUpdate saves changes made to contact
