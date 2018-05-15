@@ -117,11 +117,11 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 }
 
 //Update saves changes made to contact
-func (c *Contact) Update() error {
+func (c *Contact) Update() (*Contact, error) {
 	body, err := json.Marshal(*c)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
 
 	req, err := http.NewRequest(
@@ -137,15 +137,15 @@ func (c *Contact) Update() error {
 
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
 
-	err = executeRequestAndParseStatusCode(c.s, req)
+	result, err := execRequestReturnSingleContact(c.s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
 // Create generates a new contact from the supplied data
