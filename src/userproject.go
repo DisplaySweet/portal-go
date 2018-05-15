@@ -10,20 +10,20 @@ import (
 const userprojectEndpoint = "userprojects"
 
 type UserProject struct {
-	ID          string
-	User        User
-	UserID      string
-	CompanyID   string
-	Project     Project
-	ProjectID   string
-	AddedBy     User
-	AddedByID   string
-	ManagedBy   User
-	ManagedByID string
-	//PermissionGroup   PermissionGroup
-	PermissionGroupID string
-	CreatedDate       string
-	S                 Session
+	ID                string          `json:"Id"`
+	User              User            `json:"user"`
+	UserID            string          `json:"userid"`
+	CompanyID         string          `json:"companyid"`
+	Project           Project         `json:"project"`
+	ProjectID         string          `json:"projectid"`
+	AddedBy           User            `json:"addedby"`
+	AddedByID         string          `json:"addedbyid"`
+	ManagedBy         User            `json:"managedby"`
+	ManagedByID       string          `json:"managedbyid"`
+	PermissionGroup   PermissionGroup `json:"permissiongroup"`
+	PermissionGroupID string          `json:"permissiongroupid"`
+	CreatedDate       string          `json:"createddate"`
+	S                 Session         `json:"S"`
 }
 
 func execRequestReturnAllUserProjects(s *Session, req *http.Request) ([]*UserProject, error) {
