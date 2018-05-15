@@ -116,8 +116,8 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 	return response, err
 }
 
-// SendUpdate saves changes made to contact
-func (c *Contact) SendUpdate() error {
+//Update saves changes made to contact
+func (c *Contact) Update() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
