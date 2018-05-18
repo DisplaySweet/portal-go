@@ -10,13 +10,14 @@ import (
 const listingEndpoint = "listings"
 
 //Listing holds information of a listing
-type Listing struct {
-	ID     string        `json:"id"`
-	Fields ListingFields `json:"Fields"`
-	S      Session       `json:"S`
-}
+// type Listing struct {
+// 	ID     string        `json:"id"`
+// 	Fields ListingFields `json:"Fields"`
+// 	S      Session       `json:"S`
+// }
 
-type ListingFields struct {
+type Listing /*Fields*/ struct {
+	ID            string  `json:"id"`
 	Name          string  `json:"listing_name"`
 	Availability  string  `json:"availability"`
 	Floor         string  `json:"floor"`
@@ -32,6 +33,7 @@ type ListingFields struct {
 	InternalArea  float32 `json:"internal_area"`
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
+	S             Session `json:"S`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
