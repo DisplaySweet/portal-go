@@ -12,16 +12,16 @@ const userEndpoint = "users"
 // User holds information of a user
 type User struct {
 	ID           string  `json:"id"`
-	Active       bool    `json:"active"`
+	Active       bool    `json:"active, omitempty"`
 	SuperUser    bool    `json:"superuser"`
 	Firstname    string  `json:"firstname"`
 	Lastname     string  `json:"lastname"`
 	Email        string  `json:"email"`
 	Username     string  `json:"-"`
 	Password     string  `json:"-"`
-	ArchivedOn   string  `json:"archivedon"`
-	LastLoggedIn string  `json:"lasloggedin"`
-	CreatedDate  string  `json:"createddate"`
+	ArchivedOn   string  `json:"archivedon, omitempty"`
+	LastLoggedIn string  `json:"lasloggedin, omitempty"`
+	CreatedDate  string  `json:"createddate, omitempty"`
 	S            Session `json:"S"`
 }
 
@@ -39,20 +39,26 @@ func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 	return user, err
 }
 
-func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]*User, error) {
+func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]User, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
+	//log.Println(string(responseBytes))
 
-	var response []*User
-	err = json.Unmarshal(responseBytes, response)
-	for _, user := range response {
+	var users []User
+	err = json.Unmarshal(responseBytes, users)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	for _, user := range users {
 		user.S = *s
 	}
 
-	return response, err
+	return users, err
 }
 
 //GetUsers gets all users
