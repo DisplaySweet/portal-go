@@ -17,6 +17,7 @@ type accountsContactsResponse struct {
 func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header["X-DS-AUTH-APITOKEN"] = []string{s.Auth.APIKey}
+	req.Header["X-DS-AUTH-USERAPITOKEN"] = []string{s.Auth.UserAPIKey}
 	//req.Header["X-DS-AUTH-COMPANY"] = []string{s.Auth.Company}
 	req.Header["X-DS-DATA-APITOKEN"] = []string{s.Auth.APIKey}
 	req.Header["X-DS-DATA-COMPANY"] = []string{s.CompanyID}
