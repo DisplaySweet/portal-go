@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -39,15 +40,15 @@ func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 	return user, err
 }
 
-func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]User, error) {
+func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]*User, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
-	//log.Println(string(responseBytes))
+	log.Println(string(responseBytes))
 
-	var users []User
+	var users []*User
 	err = json.Unmarshal(responseBytes, users)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
