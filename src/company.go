@@ -9,6 +9,13 @@ import (
 
 const companyEndpoint = "companies"
 
+const ( // Agent types
+	// MasterAgent is the admin of this agency
+	MasterAgent = iota
+	// RegularAgent is a regular member of an agency
+	RegularAgent = iota
+)
+
 //Company holds information about companies
 type Company struct {
 	ID              string        `json:"id"`
@@ -100,7 +107,7 @@ func (s *Session) GetAllCompanies() ([]*Company, error) {
 	return execRequestReturnAllCompanies(s, req)
 }
 
-//GetCompanyByID creates the appropriate get request and calls the service function to execute and handle the request
+// GetCompany creates the appropriate get request and calls the service function to execute and handle the request
 func (s *Session) GetCompany(id string) (*Company, error) {
 	req, err := http.NewRequest(
 		"GET",
@@ -141,7 +148,7 @@ func (s *Session) CreateCompany(company *Company) (*Company, error) {
 	return execRequestReturnSingleCompany(s, req)
 }
 
-//UpdateCompany PUTs new company details to an existing company (using ID) in the portal
+// Update PUTs new company details to an existing company (using ID) in the portal
 func (c *Company) Update() error {
 	body, err := json.Marshal(*c)
 	if err != nil {
@@ -234,4 +241,31 @@ func (c *Company) AddUsers(u []*UserAdd) error {
 
 	return executeRequestAndParseStatusCode(&c.S, req)
 
+}
+
+// AddUser adds a single user to a company
+func (c *Company) AddUser(u *User, permissionlevel int) error {
+	body, err := json.Marshal(u)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v/%v/adduser/%v",
+			c.S.Auth.PortalEndpoint,
+			companyEndpoint,
+			c.ID,
+			permissionlevel,
+		),
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(&c.S, req)
 }
