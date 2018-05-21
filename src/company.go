@@ -70,6 +70,9 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 
 	err = json.Unmarshal(responseBytes, company)
 	if err != nil {
+		if s.DumpErrorPayloads {
+			fmt.Printf("Dumping Error Payload: %v\n", string(responseBytes))
+		}
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}

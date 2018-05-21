@@ -35,6 +35,11 @@ func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error
 	}
 	defer response.Body.Close()
 
+	if response.StatusCode != 200 {
+		err = fmt.Errorf("Error in file: %v line %v. Expected content in response but got status code %v", ErrorFile(), ErrorLine(), response.StatusCode)
+		return nil, err
+	}
+
 	return ioutil.ReadAll(response.Body)
 }
 
