@@ -19,6 +19,7 @@ type Project struct {
 	Listings  []Listing
 	Events    []Event
 	Offers    []Offer
+	S         Session `json:"S"`
 }
 
 // GetProjectByName returns a project queried by name
@@ -87,4 +88,26 @@ func (s *Session) GetProjectByID(id string) (*Project, error) {
 	}
 
 	return project, err
+}
+
+//AddCompany includes a company in a project
+func (p *Project) AddCompany(id string) error {
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v/%v/addcompany/%v",
+			p.S.Auth.PortalEndpoint,
+			projectEndpont,
+			p.ID,
+			id,
+		),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(&p.S, req)
 }

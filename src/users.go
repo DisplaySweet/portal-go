@@ -13,16 +13,16 @@ const userEndpoint = "users"
 // User holds information of a user
 type User struct {
 	ID           string  `json:"id"`
-	Active       bool    `json:"active, omitempty"`
+	Active       bool    `json:"active"`
 	SuperUser    bool    `json:"superuser"`
 	Firstname    string  `json:"firstname"`
 	Lastname     string  `json:"lastname"`
 	Email        string  `json:"email"`
 	Username     string  `json:"-"`
 	Password     string  `json:"-"`
-	ArchivedOn   string  `json:"archivedon, omitempty"`
-	LastLoggedIn string  `json:"lasloggedin, omitempty"`
-	CreatedDate  string  `json:"createddate, omitempty"`
+	ArchivedOn   string  `json:"archivedon"`
+	LastLoggedIn string  `json:"lastloggedin"`
+	CreatedDate  string  `json:"createddate"`
 	S            Session `json:"S"`
 }
 
@@ -34,8 +34,8 @@ func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 		return nil, err
 	}
 
-	user := &User{}
-	err = json.Unmarshal(responseBytes, user)
+	var user *User
+	err = json.Unmarshal(responseBytes, &user)
 
 	return user, err
 }
@@ -49,7 +49,8 @@ func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]*User, err
 	log.Println(string(responseBytes))
 
 	var users []*User
-	err = json.Unmarshal(responseBytes, users)
+
+	err = json.Unmarshal(responseBytes, &users)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err

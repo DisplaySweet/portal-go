@@ -28,6 +28,7 @@ func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 
 // Execute the request and return the bytes that come back
 func executeRequestAndGetBodyBytes(s *Session, req *http.Request) ([]byte, error) {
+	//fmt.Fprintln(os.Stderr, req.URL)
 	response, err := executeRequest(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)

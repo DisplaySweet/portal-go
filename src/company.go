@@ -44,11 +44,9 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 		return nil, err
 	}
 
-	var temp []*Company
+	var companies []*Company
 
-	list := make([]*Company, 0, 0)
-
-	err = json.Unmarshal(responseBytes, &temp)
+	err = json.Unmarshal(responseBytes, &companies)
 	if err != nil {
 		if s.DumpErrorPayloads {
 			fmt.Printf("Dumping Error Payload: %v\n", string(responseBytes))
@@ -57,12 +55,11 @@ func execRequestReturnAllCompanies(s *Session, req *http.Request) ([]*Company, e
 		return nil, err
 	}
 
-	for _, company := range temp {
+	for _, company := range companies {
 		company.S = *s
-		list = append(list, company)
 	}
 
-	return list, nil
+	return companies, nil
 }
 
 // execute the HTTP requests and get the single company that should come out
@@ -244,7 +241,7 @@ func (c *Company) AddUsers(u []*UserAdd) error {
 }
 
 // AddUser adds a single user to a company
-func (c *Company) AddUser(u *User, permissionlevel int) error {
+func (c *Company) AddUser(u *User, permissionlevel int64) error {
 	body, err := json.Marshal(u)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
