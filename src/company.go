@@ -251,10 +251,11 @@ func (c *Company) AddUser(u *User, permissionlevel int64) error {
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"%v/%v/%v/adduser/%v",
+			"%v/%v/%v/adduser/%v/%v",
 			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
 			c.ID,
+			u.ID,
 			permissionlevel,
 		),
 		bytes.NewReader(body),

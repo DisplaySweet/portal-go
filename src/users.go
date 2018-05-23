@@ -32,7 +32,7 @@ func (u *User) TriggerPasswordResetEmail() error {
 	b := bytes.NewReader(value)
 
 	req, err := http.NewRequest(
-		"GET",
+		"POST",
 		fmt.Sprintf(
 			"%v/auth/forgotpassword",
 			u.S.Auth.PortalEndpoint,
