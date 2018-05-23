@@ -26,6 +26,26 @@ type User struct {
 	S            Session `json:"S"`
 }
 
+func (u *User) triggerPasswordResetEmail(email string) error {
+	value := []byte(u.Email)
+	b := bytes.NewReader(value)
+
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/auth/forgotpassword",
+			u.S.Auth.PortalEndpoint,
+		),
+		b,
+	)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(&u.S, req)
+}
+
 // execute the HTTP requests and get the single Contact that should come out
 func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
