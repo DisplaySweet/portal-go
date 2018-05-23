@@ -26,7 +26,7 @@ type User struct {
 	S            Session `json:"S"`
 }
 
-func (u *User) triggerPasswordResetEmail(email string) error {
+func (u *User) TriggerPasswordResetEmail(email string) error {
 	value := []byte(u.Email)
 	b := bytes.NewReader(value)
 
