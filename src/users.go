@@ -18,8 +18,8 @@ type User struct {
 	Firstname    string  `json:"firstname"`
 	Lastname     string  `json:"lastname"`
 	Email        string  `json:"email"`
-	Username     string  `json:"-"`
-	Password     string  `json:"-"`
+	Username     string  `json:"username"`
+	Password     string  `json:"password"`
 	ArchivedOn   string  `json:"archivedon"`
 	LastLoggedIn string  `json:"lastloggedin"`
 	CreatedDate  string  `json:"createddate"`
