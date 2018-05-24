@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -67,7 +66,6 @@ func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]*User, err
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
-	log.Println(string(responseBytes))
 
 	var users []*User
 
