@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const projectEndpont = "projects"
+const projectEndpoint = "projects"
 
 //TODO: Not all modelled fields have yet been included
 // Project holds information about a project
@@ -29,7 +29,7 @@ func (s *Session) GetProjectByName(name string) (*Project, error) {
 		fmt.Sprintf(
 			"%v/%v?name=%v",
 			s.Auth.PortalEndpoint,
-			projectEndpont,
+			projectEndpoint,
 			name,
 		),
 		nil,
@@ -63,7 +63,7 @@ func (s *Session) GetProjectByID(id string) (*Project, error) {
 		fmt.Sprintf(
 			"%v/%v/%v",
 			s.Auth.PortalEndpoint,
-			projectEndpont,
+			projectEndpoint,
 			id,
 		),
 		nil,
@@ -98,7 +98,7 @@ func (p *Project) AddCompany(id string) error {
 		fmt.Sprintf(
 			"%v/%v/%v/addcompany/%v",
 			p.S.Auth.PortalEndpoint,
-			projectEndpont,
+			projectEndpoint,
 			p.ID,
 			id,
 		),

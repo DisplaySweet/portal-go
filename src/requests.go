@@ -20,7 +20,7 @@ func executeRequest(s *Session, req *http.Request) (*http.Response, error) {
 	req.Header["X-DS-AUTH-USERAPITOKEN"] = []string{s.Auth.UserAPIKey}
 	req.Header["X-DS-AUTH-COMPANY"] = []string{s.Auth.Company}
 	req.Header["X-DS-DATA-APITOKEN"] = []string{s.Auth.APIKey}
-	req.Header["X-DS-DATA-COMPANY"] = []string{s.CompanyID}
+	//req.Header["X-DS-DATA-COMPANY"] = []string{s.CompanyID}
 	req.Header["X-DS-DATA-PROJECT"] = []string{s.ProjectID}
 
 	return http.DefaultClient.Do(req)
