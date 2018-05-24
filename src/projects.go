@@ -87,6 +87,7 @@ func (s *Session) GetProjectByID(id string) (*Project, error) {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err
 	}
+	project.S = *s
 
 	return project, err
 }
