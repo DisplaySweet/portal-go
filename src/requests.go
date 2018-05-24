@@ -56,7 +56,8 @@ func executeRequestAndParseStatusCode(s *Session, req *http.Request) error {
 	case 204:
 		break
 	default:
-		return errors.New("ERR: Request returned bad status code")
+		err := fmt.Sprintf("ERR: Request returned bad status code: %v", response.StatusCode)
+		return errors.New(err)
 	}
 
 	return nil

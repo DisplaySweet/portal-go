@@ -25,19 +25,32 @@ type User struct {
 	S            Session `json:"S"`
 }
 
+type forgotPW struct {
+	Email string `json:"email"`
+}
+
 //TriggerPasswordResetEmail sends the user a password reset email
 func (u *User) TriggerPasswordResetEmail() error {
-	value := []byte(u.Email)
-	b := bytes.NewReader(value)
+
+	reset := forgotPW{
+		Email: u.Email,
+	}
+
+	body, err := json.Marshal(reset)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
 
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"%v/auth/forgotpassword",
+			"%v/auth/forgotPassword",
 			u.S.Auth.PortalEndpoint,
 		),
-		b,
+		bytes.NewReader(body),
 	)
+
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return err
@@ -56,6 +69,11 @@ func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 
 	var user *User
 	err = json.Unmarshal(responseBytes, &user)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+	user.S = *s
 
 	return user, err
 }
