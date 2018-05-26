@@ -6,24 +6,23 @@ import (
 	"net/http"
 )
 
-// UserCompany holds information about a UserCompany
+const userCompanyEndpoint = "usercompanies"
+
+//UserCompany holds information about a UserCompany
+type UserCompany struct {
+	User        User    `json:"user, omitempty"`
+	Company     Company `json:"company, omitempty"`
+	ID          string  `json:"id"`
+	UserID      string  `json:"userid"`
+	CompanyID   string  `json:"companyid"`
+	Role        int     `json:"role"`
+	CreatedDate string  `json:"createddate"`
+}
+
 // type UserCompany struct {
 // 	User    User
 // 	Company Company
-// 	// ID          string `json:"Id"`
-// 	// UserID      string `json:"user"`
-
-// 	// CompanyID   string `json:"companyid"`
-
-// 	// Level       uint64 `json:"level"`
-// 	// Role        string `json:"role"`
-// 	// CreatedDate string `json:"createddate"`
 // }
-
-type UserCompany struct {
-	User    User
-	Company Company
-}
 
 func execRequestReturnAllUserCompanies(s *Session, req *http.Request) ([]*UserCompany, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
@@ -53,7 +52,7 @@ func (s *Session) GetAllUserCompanies() ([]*UserCompany, error) {
 		fmt.Sprintf(
 			"%v/%v",
 			s.Auth.PortalEndpoint,
-			companyEndpoint),
+			userCompanyEndpoint),
 		nil,
 	)
 
