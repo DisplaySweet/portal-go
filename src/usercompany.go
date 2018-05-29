@@ -63,3 +63,7 @@ func (s *Session) GetAllUserCompanies() ([]*UserCompany, error) {
 
 	return execRequestReturnAllUserCompanies(s, req)
 }
+
+//TODO:
+// getUserCompanies by company,
+// getUserCompanies by user
