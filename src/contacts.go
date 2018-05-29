@@ -108,7 +108,7 @@ func (s *Session) GetContacts() ([]*Contact, error) {
 	}
 
 	var response []*Contact
-	err = json.Unmarshal(responseBytes, response)
+	err = json.Unmarshal(responseBytes, &response)
 	for _, contact := range response {
 		contact.s = s
 	}
