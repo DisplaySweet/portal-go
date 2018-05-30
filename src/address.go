@@ -10,12 +10,3 @@ type Address struct {
 	Postcode     string `json:"postcode"`
 	State        string `json:"state"`
 }
-
-type BillingAddress struct {
-	ID       string `json:"id"`
-	Street   string `json:"Street"`
-	City     string `json:"city"`
-	Country  string `json:"country"`
-	Postcode string `json:"PostalCode"`
-	State    string `json:"state"`
-}
