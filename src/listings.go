@@ -9,15 +9,9 @@ import (
 
 const listingEndpoint = "listings"
 
-//Listing holds information of a listing
-// type Listing struct {
-// 	ID     string        `json:"id"`
-// 	Fields ListingFields `json:"Fields"`
-// 	S      Session       `json:"S`
-// }
-
-type Listing /*Fields*/ struct {
+type Listing struct {
 	ID            string  `json:"id"`
+	ExternalID    string  `json:"externalid"`
 	Name          string  `json:"listing_name"`
 	Availability  string  `json:"availability"`
 	Floor         string  `json:"floor"`
@@ -33,6 +27,7 @@ type Listing /*Fields*/ struct {
 	InternalArea  float32 `json:"internal_area"`
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
+	LotNumber     int     `json:"Lot_Number__c"`
 	S             Session `json:"S`
 }
 
