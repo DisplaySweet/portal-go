@@ -149,14 +149,14 @@ func (s *Session) GetCompany(id string) (*Company, error) {
 	return execRequestReturnSingleCompany(s, req)
 }
 
-func (c *Company) GetAssignedProjects(id string) ([]*CompanyProject, error) {
+func (c *Company) GetAssignedProjects() ([]*CompanyProject, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
 			"%v/%v/%v/projects",
 			c.S.Auth.PortalEndpoint,
 			companyEndpoint,
-			id),
+			c.ID),
 		nil,
 	)
 	if err != nil {
