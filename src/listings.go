@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 const listingEndpoint = "listings"
@@ -27,6 +29,28 @@ type Listing struct {
 	InternalArea  float32 `json:"internal_area"`
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
+	LotNumber     int     `json:"Lot_Number__c"`
+	S             Session `json:"S`
+}
+
+type ExportListing struct {
+	ID            string  `json:"id"`
+	ExternalID    string  `json:"externalid"`
+	Name          string  `json:"Name"`
+	Availability  string  `json:"Sale_Stage__c"`
+	Floor         string  `json:"Floor__c"`
+	Building      string  `json:"Building__r"`
+	Price         float32 `json:"ds_live_price"`
+	OriginalPrice float32 `json:"Sales_Price__c"`
+	Bedrooms      string  `json:"Bedrooms__c"`
+	Bathrooms     string  `json:"Bathrooms__c"`
+	Study         string  `json:"Has_Study__c"`
+	Carspaces     string  `json:"Parking_Allocations__c"`
+	Aspect        string  `json:"Aspect__c"`
+	MarketingPlan string  `json:"marketing_plan"`
+	InternalArea  float32 `json:"Interior_Space__c"`
+	ExternalArea  float32 `json:"Exterior_Space__c"`
+	TotalArea     float32 `json:"Total_Space_M__c"`
 	LotNumber     int     `json:"Lot_Number__c"`
 	S             Session `json:"S`
 }
@@ -225,12 +249,12 @@ func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 }
 
 //CreateListing POSTs a new Listing to the portal
-func (s *Session) CreateListing(l *Listing) error {
+func (s *Session) CreateListing(l *ExportListing) (error, string) {
 	l.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*l)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return err, ""
 	}
 
 	req, err := http.NewRequest(
@@ -244,13 +268,13 @@ func (s *Session) CreateListing(l *Listing) error {
 
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return err, ""
 	}
 
 	response, err := executeRequest(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return err
+		return err, ""
 	}
 
 	switch response.StatusCode {
@@ -258,10 +282,14 @@ func (s *Session) CreateListing(l *Listing) error {
 	case 204:
 		break
 	default:
-		return fmt.Errorf("Error in file: %v line %v. Original ERR: Did not get a success code from the portal: %v", ErrorFile(), ErrorLine(), response.StatusCode)
+		return fmt.Errorf("Error in file: %v line %v. Original ERR: Did not get a success code from the portal: %v", ErrorFile(), ErrorLine(), response.StatusCode), ""
 	}
 
-	return nil
+	bodyBytes, err := ioutil.ReadAll(response.Body)
+	id := string(bodyBytes)
+	id = strings.Replace(id, "\"", "", 2)
+
+	return nil, id
 }
 
 //DeleteListings removes the referenced listing from Listings

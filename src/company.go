@@ -32,6 +32,12 @@ type Company struct {
 	//AllocationGroupAgencies []AllocationGroupAgency `json`
 }
 
+type CompanyProject struct {
+	OwnerID   string
+	CompanyID string
+	ProjectID string
+}
+
 type UserAdd struct {
 	Level string `json:"Level"`
 }
@@ -85,6 +91,25 @@ func execRequestReturnSingleCompany(s *Session, req *http.Request) (*Company, er
 	return company, err
 }
 
+func execRequestReturnAssignedCompanyProjects(s *Session, req *http.Request) ([]*CompanyProject, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	var companyProjects []*CompanyProject
+
+	err = json.Unmarshal(responseBytes, &companyProjects)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return companyProjects, nil
+
+}
+
 //GetAllCompanies creates the appropriate get request and calls the service function to execute and handle the request
 func (s *Session) GetAllCompanies() ([]*Company, error) {
 	req, err := http.NewRequest(
@@ -122,6 +147,24 @@ func (s *Session) GetCompany(id string) (*Company, error) {
 	}
 
 	return execRequestReturnSingleCompany(s, req)
+}
+
+func (c *Company) GetAssignedProjects(id string) ([]*CompanyProject, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v/projects",
+			c.S.Auth.PortalEndpoint,
+			companyEndpoint,
+			id),
+		nil,
+	)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnAssignedCompanyProjects(&c.S, req)
 }
 
 //CreateCompany POSTs a new company to the portal
