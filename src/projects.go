@@ -11,15 +11,16 @@ const projectEndpoint = "projects"
 //TODO: Not all modelled fields have yet been included
 // Project holds information about a project
 type Project struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	CompanyID string    `json:"companyid"`
-	Company   Company   `json:"omitempty"`
-	Active    bool      `json:"active"`
-	Listings  []Listing `json:"omitempty"`
-	Events    []Event   `json:"omitempty"`
-	Offers    []Offer   `json:"omitempty"`
-	S         Session   `json:"S"`
+	ID         string    `json:"id"`
+	Name       string    `json:"name"`
+	CompanyID  string    `json:"companyid"`
+	Company    Company   `json:"omitempty"`
+	Active     bool      `json:"active"`
+	Listings   []Listing `json:"omitempty"`
+	Events     []Event   `json:"omitempty"`
+	Offers     []Offer   `json:"omitempty"`
+	ExternalID string    `json:"externalid"`
+	S          Session   `json:"S"`
 }
 
 // GetProjectByName returns a project queried by name
@@ -77,7 +78,7 @@ func (s *Session) GetProjectByID(id string) (*Project, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, err
+		return nil, errB
 	}
 
 	var project *Project
