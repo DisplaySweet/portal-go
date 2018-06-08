@@ -22,6 +22,7 @@ type User struct {
 	ArchivedOn   string  `json:"archivedon"`
 	LastLoggedIn string  `json:"lastloggedin"`
 	CreatedDate  string  `json:"createddate"`
+	ExternalID   string  `json:"externalid"`
 	S            Session `json:"S"`
 }
 
