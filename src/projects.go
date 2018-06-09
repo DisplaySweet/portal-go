@@ -118,7 +118,7 @@ func (s *Session) GetProjectByID(id string) (*Project, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, errB
+		return nil, err
 	}
 
 	var project *Project
