@@ -23,6 +23,46 @@ type Project struct {
 	S          Session   `json:"S"`
 }
 
+func (s *Session) GetAllProjects() ([]*Project, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v",
+			s.Auth.PortalEndpoint,
+			projectEndpoint,
+		),
+		nil,
+	)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	var projects []*Project
+
+	err = json.Unmarshal(responseBytes, &projects)
+	if err != nil {
+		if s.DumpErrorPayloads {
+			fmt.Printf("Dumping Error Payload: %v\n", string(responseBytes))
+		}
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	for _, project := range projects {
+		project.S = *s
+	}
+
+	return projects, nil
+
+}
+
 // GetProjectByName returns a project queried by name
 func (s *Session) GetProjectByName(name string) (*Project, error) {
 	req, err := http.NewRequest(
