@@ -26,6 +26,7 @@ type Contact struct {
 	ManageByID  string  `json:"managebyid"`
 	OwnerID     string  `json:"ownerid"`
 	FIRB        int     `json:"firb"`
+	ExternalID  string  `json:"externalid"`
 	s           *Session
 }
 
