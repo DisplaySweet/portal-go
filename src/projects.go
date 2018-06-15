@@ -27,7 +27,7 @@ func (s *Session) GetAllProjects() ([]*Project, error) {
 	req, err := http.NewRequest(
 		"GET",
 		fmt.Sprintf(
-			"%v/%v",
+			"%v/%v/all",
 			s.Auth.PortalEndpoint,
 			projectEndpoint,
 		),
