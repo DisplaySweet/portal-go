@@ -34,25 +34,80 @@ type Listing struct {
 }
 
 type ExportListing struct {
-	ID            string  `json:"id"`
-	ExternalID    string  `json:"externalid"`
-	Name          string  `json:"Name"`
-	Availability  string  `json:"Sale_Stage__c"`
-	Floor         string  `json:"Floor__c"`
-	Building      string  `json:"Building__r"`
-	Price         float32 `json:"ds_live_price"`
-	OriginalPrice float32 `json:"Sales_Price__c"`
-	Bedrooms      string  `json:"Bedrooms__c"`
-	Bathrooms     string  `json:"Bathrooms__c"`
-	Study         string  `json:"Has_Study__c"`
-	Carspaces     string  `json:"Parking_Allocations__c"`
-	Aspect        string  `json:"Aspect__c"`
-	MarketingPlan string  `json:"marketing_plan"`
-	InternalArea  float32 `json:"Interior_Space__c"`
-	ExternalArea  float32 `json:"Exterior_Space__c"`
-	TotalArea     float32 `json:"Total_Space_M__c"`
-	LotNumber     int     `json:"Lot_Number__c"`
-	S             Session `json:"S`
+	ID            ID            `json:"id"`
+	ExternalID    ExternalID    `json:"externalid"`
+	Name          Name          `json:"Name"`
+	Availability  Availability  `json:"Sale_Stage__c"`
+	Floor         Floor         `json:"Floor__c"`
+	Building      Building      `json:"Building__r"`
+	Price         Price         `json:"ds_live_price"`
+	OriginalPrice OriginalPrice `json:"Sales_Price__c"`
+	Bedrooms      Bedrooms      `json:"Bedrooms__c"`
+	Bathrooms     Bathrooms     `json:"Bathrooms__c"`
+	Study         Study         `json:"Has_Study__c"`
+	Carspaces     Carspaces     `json:"Parking_Allocations__c"`
+	Aspect        Aspect        `json:"Aspect__c"`
+	MarketingPlan MarketingPlan `json:"marketing_plan"`
+	InternalArea  InternalArea  `json:"Interior_Space__c"`
+	ExternalArea  ExternalArea  `json:"Exterior_Space__c"`
+	TotalArea     TotalArea     `json:"Total_Space_M__c"`
+	LotNumber     LotNumber     `json:"Lot_Number__c"`
+	S             Session       `json:"S`
+}
+
+type ID struct {
+	String string `json:"string"`
+}
+type ExternalID struct {
+	String string `json:"string"`
+}
+type Name struct {
+	String string `json:"string"`
+}
+type Availability struct {
+	String string `json:"string"`
+}
+type Floor struct {
+	String string `json:"string"`
+}
+type Building struct {
+	String string `json:"string"`
+}
+type Bedrooms struct {
+	String string `json:"string"`
+}
+type Bathrooms struct {
+	String string `json:"string"`
+}
+type Study struct {
+	String string `json:"string"`
+}
+type Carspaces struct {
+	String string `json:"string"`
+}
+type Aspect struct {
+	String string `json:"string"`
+}
+type MarketingPlan struct {
+	String string `json:"string"`
+}
+type Price struct {
+	Float float32 `json:"float"`
+}
+type OriginalPrice struct {
+	Float float32 `json:"float"`
+}
+type InternalArea struct {
+	Float float32 `json:"float"`
+}
+type ExternalArea struct {
+	Float float32 `json:"float"`
+}
+type TotalArea struct {
+	Float float32 `json:"float"`
+}
+type LotNumber struct {
+	Int int `json:"int"`
 }
 
 // execute the HTTP requests and get the single Listing that should come out
