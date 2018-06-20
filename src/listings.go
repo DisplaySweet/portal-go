@@ -305,7 +305,7 @@ func (s *Session) GetAllStatusActivity() ([]*ListingStatusActivity, error) {
 
 //CreateListing POSTs a new Listing to the portal
 func (s *Session) CreateListing(l *ExportListing) (error, string) {
-	l.ID = "" // Make sure to blank out the ID
+	l.ID.String = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*l)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
