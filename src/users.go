@@ -79,6 +79,24 @@ func execRequestReturnSingleUser(s *Session, req *http.Request) (*User, error) {
 	return user, err
 }
 
+func execRequestReturnSingleUserStatuscode(s *Session, req *http.Request) (*User, int, error) {
+	responseBytes, statuscode, err := executeRequestAndGetBodyBytesModifiedStatus(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, statuscode, err
+	}
+
+	var user *User
+	err = json.Unmarshal(responseBytes, &user)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, statuscode, err
+	}
+	user.S = *s
+
+	return user, statuscode, err
+}
+
 func execRequestReturnMultipleUsers(s *Session, req *http.Request) ([]*User, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
@@ -201,12 +219,12 @@ func (s *Session) GetUserByID(id string) (*User, error) {
 
 // Create generates a new contact from the supplied data
 // Create should return the user that was just created.
-func (s *Session) CreateUser(u *User) (*User, error) {
+func (s *Session) CreateUser(u *User) (*User, int, error) {
 	u.ID = "" // Make sure to blank out the ID
 	body, err := json.Marshal(*u)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, err
+		return nil, 500, err
 	}
 
 	req, err := http.NewRequest(
@@ -221,15 +239,15 @@ func (s *Session) CreateUser(u *User) (*User, error) {
 
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, err
+		return nil, 500, err
 	}
 
-	result, err := execRequestReturnSingleUser(s, req)
+	result, statuscode, err := execRequestReturnSingleUserStatuscode(s, req)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
-		return nil, err
+		return nil, statuscode, err
 	}
-	return result, nil
+	return result, statuscode, nil
 }
 
 //Update saves changes made to contact
