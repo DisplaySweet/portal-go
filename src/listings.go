@@ -41,7 +41,6 @@ type ExportListing struct {
 	Floor         Floor         `json:"Floor__c"`
 	Building      Building      `json:"Building__r"`
 	Price         Price         `json:"ds_live_price"`
-	OriginalPrice OriginalPrice `json:"Sales_Price__c"`
 	Bedrooms      Bedrooms      `json:"Bedrooms__c"`
 	Bathrooms     Bathrooms     `json:"Bathrooms__c"`
 	Study         Study         `json:"Has_Study__c"`
@@ -92,9 +91,6 @@ type MarketingPlan struct {
 	String string `json:"string"`
 }
 type Price struct {
-	Float float32 `json:"float"`
-}
-type OriginalPrice struct {
 	Float float32 `json:"float"`
 }
 type InternalArea struct {
