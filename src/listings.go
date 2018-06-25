@@ -41,12 +41,13 @@ type ExportListing struct {
 	Floor         Floor         `json:"Floor__c"`
 	Building      Building      `json:"Building__r"`
 	Price         Price         `json:"ds_live_price"`
+	OriginalPrice OriginalPrice `json:"Sales_Price__c"`
+	MarketingPlan MarketingPlan `json:"marketing_plan"`
 	Bedrooms      Bedrooms      `json:"Bedrooms__c"`
 	Bathrooms     Bathrooms     `json:"Bathrooms__c"`
 	Study         Study         `json:"Has_Study__c"`
 	Carspaces     Carspaces     `json:"Parking_Allocations__c"`
 	Aspect        Aspect        `json:"Aspect__c"`
-	MarketingPlan MarketingPlan `json:"marketing_plan"`
 	InternalArea  InternalArea  `json:"Interior_Space__c"`
 	ExternalArea  ExternalArea  `json:"Exterior_Space__c"`
 	TotalArea     TotalArea     `json:"Total_Space_M__c"`
@@ -87,11 +88,14 @@ type Carspaces struct {
 type Aspect struct {
 	String string `json:"string"`
 }
-type MarketingPlan struct {
-	String string `json:"string"`
-}
 type Price struct {
 	Float float32 `json:"float"`
+}
+type OriginalPrice struct {
+	Float float32 `json:"float"`
+}
+type MarketingPlan struct {
+	String string `json:"string"`
 }
 type InternalArea struct {
 	Float float32 `json:"float"`
