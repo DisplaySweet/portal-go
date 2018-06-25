@@ -38,14 +38,13 @@ type ExportListing struct {
 	ExternalID    ExternalID    `json:"externalid"`
 	Name          Name          `json:"Name"`
 	Availability  Availability  `json:"Sale_Stage__c"`
-	Floor         Floor         `json:"Floor__c"`
+	Floor         Floor         `json:"ds_rep_level"`
 	Building      Building      `json:"Building__r"`
 	Price         Price         `json:"ds_live_price"`
 	OriginalPrice OriginalPrice `json:"Sales_Price__c"`
 	MarketingPlan MarketingPlan `json:"marketing_plan"`
 	Bedrooms      Bedrooms      `json:"Bedrooms__c"`
 	Bathrooms     Bathrooms     `json:"Bathrooms__c"`
-	Study         Study         `json:"Has_Study__c"`
 	Carspaces     Carspaces     `json:"Parking_Allocations__c"`
 	Aspect        Aspect        `json:"Aspect__c"`
 	InternalArea  InternalArea  `json:"Interior_Space__c"`
@@ -53,6 +52,7 @@ type ExportListing struct {
 	TotalArea     TotalArea     `json:"Total_Space_M__c"`
 	LotNumber     LotNumber     `json:"Lot_Number__c"`
 	S             Session       `json:"S`
+	// Study         Study         `json:"Has_Study__c"`
 }
 
 type ID struct {
@@ -79,9 +79,10 @@ type Bedrooms struct {
 type Bathrooms struct {
 	String string `json:"string"`
 }
-type Study struct {
-	String string `json:"string"`
-}
+
+// type Study struct {
+// 	String string `json:"string"`
+// }
 type Carspaces struct {
 	String string `json:"string"`
 }
