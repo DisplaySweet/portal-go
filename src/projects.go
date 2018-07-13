@@ -163,7 +163,7 @@ func (p *Project) AddCompany(id string) error {
 	return executeRequestAndParseStatusCode(&p.S, req)
 }
 
-func (p *ProjectPayload) Create() error {
+func (s *Session) CreateProject(p *ProjectPayload) error {
 	body, err := json.Marshal(*p)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
@@ -174,7 +174,7 @@ func (p *ProjectPayload) Create() error {
 		"POST",
 		fmt.Sprintf(
 			"%v/%v/create",
-			p.S.Auth.PortalEndpoint,
+			s.Auth.PortalEndpoint,
 			projectEndpoint,
 		),
 		bytes.NewReader(body),
@@ -185,5 +185,5 @@ func (p *ProjectPayload) Create() error {
 		return err
 	}
 
-	return executeRequestAndParseStatusCode(&p.S, req)
+	return executeRequestAndParseStatusCode(s, req)
 }
