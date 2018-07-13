@@ -1,6 +1,7 @@
 package portal
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,6 +22,13 @@ type Project struct {
 	Offers     []Offer   `json:"omitempty"`
 	ExternalID string    `json:"externalid"`
 	S          Session   `json:"S"`
+}
+
+type ProjectPayload struct {
+	ID        string  `json:"Id"`
+	Name      string  `json:"Name"`
+	CompanyID string  `json:"CompanyID"`
+	S         Session `json:"S"`
 }
 
 func (s *Session) GetAllProjects() ([]*Project, error) {
@@ -145,6 +153,31 @@ func (p *Project) AddCompany(id string) error {
 			id,
 		),
 		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	return executeRequestAndParseStatusCode(&p.S, req)
+}
+
+func (p *ProjectPayload) Create() error {
+	body, err := json.Marshal(*p)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err
+	}
+
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v/create",
+			p.S.Auth.PortalEndpoint,
+			projectEndpoint,
+		),
+		bytes.NewReader(body),
 	)
 
 	if err != nil {
