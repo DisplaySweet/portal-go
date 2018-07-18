@@ -25,10 +25,10 @@ type Project struct {
 }
 
 type ProjectPayload struct {
-	ID        string  `json:"Id"`
+	ID        string  `json:"ID"`
 	Name      string  `json:"Name"`
 	CompanyID string  `json:"CompanyID"`
-	S         Session `json:"S"`
+	S         Session `json:"-"`
 }
 
 func (s *Session) GetAllProjects() ([]*Project, error) {
