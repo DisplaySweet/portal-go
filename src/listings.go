@@ -30,7 +30,7 @@ type Listing struct {
 	ExternalArea  float32 `json:"external_area"`
 	TotalArea     float32 `json:"total_area"`
 	LotNumber     int     `json:"Lot_Number__c"`
-	S             Session `json:"S`
+	S             Session `json:"S"`
 }
 
 type ExportListing struct {
@@ -51,7 +51,7 @@ type ExportListing struct {
 	ExternalArea  ExternalArea  `json:"Exterior_Space__c"`
 	TotalArea     TotalArea     `json:"Total_Space_M__c"`
 	LotNumber     LotNumber     `json:"Lot_Number__c"`
-	S             Session       `json:"S`
+	S             Session       `json:"S"`
 	// Study         Study         `json:"Has_Study__c"`
 }
 
@@ -367,86 +367,6 @@ func (l *Listing) Delete() error {
 
 	return executeRequestAndParseStatusCode(&l.S, req)
 }
-
-//I guess because []*Listing isnt a defined struct itself, we cant do this?
-
-//WIP//
-
-// func (l []*Listing) BulkUpdate(s *Session) err {
-// 	body, err := json.Marshal(*l)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	req, err := http.NewRequest(
-// 		"PUT",
-// 		fmt.Sprintf(
-// 			"%v/%v",
-// 			s.Auth.PortalEndpoint,
-// 			listingEndpoint,
-// 		),
-// 		bytes.NewReader(body),
-// 	)
-
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	response, err := executeRequest(s, req)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	switch response.StatusCode {
-// 	case 200:
-// 	case 204:
-// 		break
-// 	default:
-// 		return errors.New("Did not get a success code from the portal")
-// 	}
-
-// 	return nil
-// }
-
-//I guess because []*Listing isnt a defined struct itself, we cant do this?
-
-//WIP
-
-// func (l []*Listing) BulkUpdateByRole(s *Session) err {
-// 	body, err := json.Marshal(*l)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	req, err := http.NewRequest(
-// 		"PUT",
-// 		fmt.Sprintf(
-// 			"%v/%v/bulkbyrole",
-// 			s.Auth.PortalEndpoint,
-// 			listingEndpoint,
-// 		),
-// 		bytes.NewReader(body),
-// 	)
-
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	response, err := executeRequest(s, req)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	switch response.StatusCode {
-// 	case 200:
-// 	case 204:
-// 		break
-// 	default:
-// 		return errors.New("Did not get a success code from the portal")
-// 	}
-
-// 	return nil
-// }
 
 // SendUpdate saves changes to listing
 func (l *Listing) Update() error {
