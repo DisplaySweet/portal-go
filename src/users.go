@@ -8,6 +8,7 @@ import (
 )
 
 const userEndpoint = "users"
+const GetUserByExtIdEndpoint = userEndpoint + "/getByExternalId"
 
 // User holds information of a user
 type User struct {
@@ -137,6 +138,27 @@ func (s *Session) GetUsers() ([]*User, error) {
 	}
 
 	return execRequestReturnMultipleUsers(s, req)
+}
+
+// GetUserByID gets a single contact by its ID
+func (s *Session) GetUserByExtId(extId string) (*User, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			GetUserByExtIdEndpoint,
+			extId,
+		),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleUser(s, req)
 }
 
 func (u *User) GetAccountsContacts() ([]*Account, []*Contact, error) {

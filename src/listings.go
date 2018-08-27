@@ -10,6 +10,7 @@ import (
 )
 
 const listingEndpoint = "listings"
+const GetListingByExtIdEndpoint = listingEndpoint + "/getByExternalId"
 
 type Listing struct {
 	ID            string  `json:"id"`
@@ -161,6 +162,24 @@ func execRequestReturnListings(s *Session, req *http.Request) ([]*Listing, error
 	return list, nil
 }
 
+// execute the HTTP requests and get the single Listing that should come out
+func execRequestReturnSingleisting(s *Session, req *http.Request) (*Listing, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	var listing *Listing
+	err = json.Unmarshal(responseBytes, &listing)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return listing, err
+}
+
 func execRequestReturnActivity(s *Session, req *http.Request) (*ListingActivity, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
@@ -244,6 +263,26 @@ func (s *Session) GetListings() ([]*Listing, error) {
 	}
 
 	return execRequestReturnListings(s, req)
+}
+
+//GetListings returns a slice of all Listing
+func (s *Session) GetListingByExtId(extId string) (*Listing, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			GetListingByExtIdEndpoint,
+			extId),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleisting(s, req)
 }
 
 //GetActivityByID GETs all the activity data for a particular listing (using ID)

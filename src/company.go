@@ -8,7 +8,7 @@ import (
 )
 
 const companyEndpoint = "companies"
-
+const GetCompanyByExtIdEndpoint = companyEndpoint + "/getByExternalId"
 const ( // Agent types
 	// MasterAgent is the admin of this agency
 	MasterAgent = iota
@@ -139,6 +139,26 @@ func (s *Session) GetCompany(id string) (*Company, error) {
 			s.Auth.PortalEndpoint,
 			companyEndpoint,
 			id),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleCompany(s, req)
+}
+
+// GetCompany creates the appropriate get request and calls the service function to execute and handle the request
+func (s *Session) GetCompanyByExtId(extId string) (*Company, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			GetCompanyByExtIdEndpoint,
+			extId),
 		nil,
 	)
 
