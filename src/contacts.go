@@ -8,6 +8,7 @@ import (
 )
 
 const contactEndpoint = "usercontacts"
+const GetContactByEmailEndpoint = contactEndpoint + "/getbyemail"
 
 // Contact holds information of a contact
 type Contact struct {
@@ -79,6 +80,25 @@ func (s *Session) GetContactByName(firstname string, lastname string) (*Contact,
 		nil,
 	)
 
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleContact(s, req)
+}
+
+// GetContactByEmail gets the first contact that matches the provided email
+func (s *Session) GetContactByEmail(email string) (*Contact, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			GetContactByEmailEndpoint,
+			email),
+		nil,
+	)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
 		return nil, err

@@ -8,6 +8,7 @@ import (
 )
 
 const prospectEndpoint = "prospects"
+const CreateProspectFromContact = prospectEndpoint + "/createFromContact"
 
 //Prospect holds the data for a prospect
 type Prospect struct {
@@ -65,6 +66,20 @@ func execRequestReturnAllEventProspects(s *Session, req *http.Request) ([]*Prosp
 	return list, nil
 }
 
+// execute the HTTP requests and get the single Prospect that should come out
+func execRequestReturnSingleProspect(s *Session, req *http.Request) (*Prospect, error) {
+	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	prospect := &Prospect{}
+	err = json.Unmarshal(responseBytes, prospect)
+
+	return prospect, err
+}
+
 //GetAllEventProspects GETs a list of all prospects for an event
 func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 	req, err := http.NewRequest(
@@ -88,6 +103,26 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 //The relevant method in the prospects controller shouldn't really belong to a Prospect,
 //TODO: confirm coverage of prospects controller at a later date
 //func (s *Session) GetAllEventsForDate() (e []*Event)
+
+//UpdateProspect POSTs updates a prospect with new data, using the prospect object
+func (s *Session) CreateProspect(contactId string) (*Prospect, error) {
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			CreateProspectFromContact,
+			contactId,
+		),
+		nil,
+	)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleProspect(s, req)
+}
 
 //UpdateProspect PUTs updates a prospect with new data, using the prospect object
 func (p *Prospect) Update() error {
