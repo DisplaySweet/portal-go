@@ -111,6 +111,11 @@ type TotalArea struct {
 type LotNumber struct {
 	Int int `json:"int"`
 }
+type OpportunityPayload struct {
+	ID            string `json:"id"`
+	StageName     string `json:"StageName"`
+	ListingStatus string `json:"ListingStatus"`
+}
 
 // execute the HTTP requests and get the single Listing that should come out
 func execRequestReturnSingleListing(s *Session, req *http.Request) (*Listing, error) {
@@ -358,6 +363,50 @@ func (s *Session) CreateListing(l *ExportListing) (error, string) {
 			"%v/%v",
 			s.Auth.PortalEndpoint,
 			listingEndpoint),
+		bytes.NewReader(body),
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err, ""
+	}
+
+	response, err := executeRequest(s, req)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err, ""
+	}
+
+	switch response.StatusCode {
+	case 200:
+	case 204:
+		break
+	default:
+		return fmt.Errorf("Error in file: %v line %v. Original ERR: Did not get a success code from the portal: %v", ErrorFile(), ErrorLine(), response.StatusCode), ""
+	}
+
+	bodyBytes, err := ioutil.ReadAll(response.Body)
+	id := string(bodyBytes)
+	id = strings.Replace(id, "\"", "", 2)
+
+	return nil, id
+}
+
+//UpdateListingContractStatus POSTs a new opportunity status to the portal
+func (s *Session) UpdateListingContractStatus(payload OpportunityPayload, listingId string, prospectId string) (error, string) {
+	body, err := json.Marshal(payload)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return err, ""
+	}
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"%v/%v/%v/updatefromwebhook/%v",
+			s.Auth.PortalEndpoint,
+			listingEndpoint,
+			listingId,
+			prospectId),
 		bytes.NewReader(body),
 	)
 

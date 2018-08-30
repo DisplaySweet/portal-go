@@ -9,6 +9,7 @@ import (
 )
 
 const offerEndpoint = "offers"
+const GetOfferByExtIdEndpoint = offerEndpoint + "/getByExternalId"
 
 type Offer struct {
 	ID                     string
@@ -24,7 +25,7 @@ type Offer struct {
 	Prospect               Prospect
 	Attachments            []OfferAttachment
 	TimeOfOffer            string
-	Price                  float64
+	Price                  string
 	FundsReceived          float64
 	Status                 string
 	OfferStatusChangedDate string
@@ -137,6 +138,26 @@ func (s *Session) GetOfferByID(id string) (*Offer, error) {
 			s.Auth.PortalEndpoint,
 			offerEndpoint,
 			id),
+		nil,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
+
+	return execRequestReturnSingleOffer(s, req)
+}
+
+//GetOfferByID returns a single offer given the offer ID
+func (s *Session) GetOfferByExtID(extId string) (*Offer, error) {
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"%v/%v/%v",
+			s.Auth.PortalEndpoint,
+			GetOfferByExtIdEndpoint,
+			extId),
 		nil,
 	)
 
