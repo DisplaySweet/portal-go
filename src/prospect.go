@@ -41,6 +41,13 @@ type Prospect struct {
 	s           *Session
 }
 
+type CreateProspectPayload struct {
+	ContactId string `json:"contactId"`
+	AgentId   string `json:"userId"`
+	AgencyId  string `json:"companyId"`
+	ListingId string `json:"listingId"`
+}
+
 func execRequestReturnAllEventProspects(s *Session, req *http.Request) ([]*Prospect, error) {
 	responseBytes, err := executeRequestAndGetBodyBytes(s, req)
 	if err != nil {
@@ -105,16 +112,20 @@ func (s *Session) GetAllEventProspects(eventID string) ([]*Prospect, error) {
 //func (s *Session) GetAllEventsForDate() (e []*Event)
 
 //UpdateProspect POSTs updates a prospect with new data, using the prospect object
-func (s *Session) CreateProspect(contactId string) (*Prospect, error) {
+func (s *Session) CreateProspect(payload CreateProspectPayload) (*Prospect, error) {
+	body, err := json.Marshal(payload)
+	if err != nil {
+		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
+		return nil, err
+	}
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"%v/%v/%v",
+			"%v/%v",
 			s.Auth.PortalEndpoint,
 			CreateProspectFromContact,
-			contactId,
 		),
-		nil,
+		bytes.NewReader(body),
 	)
 	if err != nil {
 		err = fmt.Errorf("Error in file: %v line %v. Original ERR: %v", ErrorFile(), ErrorLine(), err)
