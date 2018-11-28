@@ -8,11 +8,4 @@ This library requires an API key to be issued for sync purposes as regular auth 
 > go get github.com/DisplaySweet/portal-go/src
 ```
 
-Usage:
-```
-package main
-
-func main() {
-    
-}
-```
+This library is in use within DisplaySweet, however slated to become deprecated.
